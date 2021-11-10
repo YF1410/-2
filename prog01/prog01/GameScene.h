@@ -11,6 +11,7 @@
 #include "Model.h"
 #include "stdlib.h"
 #include "time.h"
+#include "player.h"
 
 using namespace DirectX;
 
@@ -36,10 +37,7 @@ public: // メンバ関数
 	void Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio);
 	// 毎フレーム処理
 	void Update();
-	//pos初期化
-	void resetPos();
-	//車の描画位置初期化
-	void ScrollCarPos(int activeCarNum);
+	
 	// 描画
 	void Draw();
 
