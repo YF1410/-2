@@ -68,42 +68,16 @@ private: // メンバ変数
 	float playerScale = 1.0f;
 	float groundScale = 15.0f;
 	float largeCarScale = 3.0f;
-	float miniCarScale = 2.6f;
-	float truckScale = 3.0f;
-	float carMove = 3.0f;
-	int carTypeR = 0;
-	int carTypeL = 0;
-	int activeCarNum = 0;
-	bool isJumpUp = false;
-	bool isJumpDown = false;
 	float scrollGround = 35.0f;
 	float scrollCar = 60.0f;
 	int scrollCount = 1;
-	float zMove = 1.0f;
-	float yMove = 0.5f;
-	int count = 0;
-	bool isRightLeg = true;
-	bool isLeftLeg = false;
-	int warningRWaitTime;
-	int warningLWaitTime;
-	bool isWarningRWait;
-	bool isWarningLWait;
-	bool isRightWarning;
-	bool isLeftWarning;
-	bool isRunCarR;
-	bool isRunCarL;
-	int blinkingR;//点滅用
-	int blinkingL;//点滅用
-	int blinkRCount;
-	int blinkLCount;
-	int blinking[6];//点滅用
 	float nowTime = 0;
 	float endTime = 1.0;
 	float timeRate = 0;
 	bool isChange = false;
-	int scoreCountOne = 0;
-	int scoreCountTen = 0;
-	int scoreCountHundred = 0;
-	int soundCount = -10;
-	int soundCount2 = -10;
+
+	XMFLOAT3 frontMove;
+	float backMove;
+	float rightMove;
+	float leftMove;
 };
