@@ -77,9 +77,5 @@ private: // メンバ変数
 	float endTime = 1.0;
 	float timeRate = 0;
 	bool isChange = false;
-
-	XMFLOAT3 frontMove;
-	float backMove;
-	float rightMove;
-	float leftMove;
+	float moveAmount = 1.0f;
 };

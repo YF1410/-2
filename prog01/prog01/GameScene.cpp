@@ -67,7 +67,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 	gameOver->SetSize({ 1280.0f,960.0f });
 
 	//.objの名前を指定してモデルを読み込む
-	playerModel = playerModel->CreateFromObject("player");
+	playerModel = playerModel->CreateFromObject("punk");
 	groundModel = groundModel->CreateFromObject("ground");
 
 	// 3Dオブジェクト生成
@@ -77,7 +77,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 	// 3Dオブジェクトにモデルを割り当てる
 
 	playerObj->SetModel(playerModel);
-	playerObj->SetPosition({ 0.0f, 0.0f, 0.0f });
+	playerObj->SetPosition({ 25.0f, 0.0f, -25.0f });
 	playerObj->SetScale({ 5.0f, 5.0f, 5.0f });
 	playerObj->SetRotation({ 0, -45.0f, 0 });
 	groundObj->SetModel(groundModel);
@@ -140,36 +140,36 @@ void GameScene::Move() {
 	// オブジェクト移動
 	// 移動後の座標を計算
 	if (input->PushKey(DIK_W)) {
-		playerPos.z += 0.5f;
-		cameraEye.z += 0.5f;
-		cameraTarget.z += 0.5f;
-		playerPos.x -= 0.5f;
-		cameraEye.x -= 0.5f;
-		cameraTarget.x -= 0.5f;
+		playerPos.z += moveAmount;
+		cameraEye.z += moveAmount;
+		cameraTarget.z += moveAmount;
+		playerPos.x -= moveAmount;
+		cameraEye.x -= moveAmount;
+		cameraTarget.x -= moveAmount;
 	}
 	else if (input->PushKey(DIK_S)) {
-		playerPos.z -= 0.5f;
-		cameraEye.z -= 0.5f;
-		cameraTarget.z -= 0.5f;
-		playerPos.x += 0.5f;
-		cameraEye.x += 0.5f;
-		cameraTarget.x += 0.5f;
+		playerPos.z -= moveAmount;
+		cameraEye.z -= moveAmount;
+		cameraTarget.z -= moveAmount;
+		playerPos.x += moveAmount;
+		cameraEye.x += moveAmount;
+		cameraTarget.x += moveAmount;
 	}
 	if (input->PushKey(DIK_D)) {
-		playerPos.x += 0.5f;
-		cameraEye.x += 0.5f;
-		cameraTarget.x += 0.5f;
-		playerPos.z += 0.5f;
-		cameraEye.z += 0.5f;
-		cameraTarget.z += 0.5f;
+		playerPos.x += moveAmount;
+		cameraEye.x += moveAmount;
+		cameraTarget.x += moveAmount;
+		playerPos.z += moveAmount;
+		cameraEye.z += moveAmount;
+		cameraTarget.z += moveAmount;
 	}
 	else if (input->PushKey(DIK_A)) {
-		playerPos.x -= 0.5f;
-		cameraEye.x -= 0.5f;
-		cameraTarget.x -= 0.5f;
-		playerPos.z -= 0.5f;
-		cameraEye.z -= 0.5f;
-		cameraTarget.z -= 0.5f;
+		playerPos.x -= moveAmount;
+		cameraEye.x -= moveAmount;
+		cameraTarget.x -= moveAmount;
+		playerPos.z -= moveAmount;
+		cameraEye.z -= moveAmount;
+		cameraTarget.z -= moveAmount;
 	}
 
 	// 座標の変更を反映
