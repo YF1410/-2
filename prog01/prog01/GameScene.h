@@ -41,6 +41,8 @@ public: // メンバ関数
 	// 描画
 	void Draw();
 
+	void Move();
+
 private: // メンバ変数
 	DirectXCommon* dxCommon = nullptr;
 	Input* input = nullptr;
