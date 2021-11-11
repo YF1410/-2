@@ -78,7 +78,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 
 	playerObj->SetModel(playerModel);
 	playerObj->SetPosition({ 0.0f, 0.0f, 0.0f });
-	playerObj->SetScale({ 10.0f, 10.0f, 10.0f });
+	playerObj->SetScale({ 5.0f, 5.0f, 5.0f });
+	playerObj->SetRotation({ 0, -45.0f, 0 });
 	groundObj->SetModel(groundModel);
 	groundObj->SetPosition({ 0.0f, -5.0f, 0.0f });
 	groundObj->SetScale({ 15.0f, 15.0f, 15.0f });
@@ -91,20 +92,50 @@ void GameScene::Update() {
 	XMFLOAT3 cameraEye = Object3d::GetEye();
 	XMFLOAT3 cameraTarget = Object3d::GetTarget();
 
+
 	Object3d::SetEye(cameraEye);
 	Object3d::SetTarget(cameraTarget);
 
+
 	// オブジェクト移動
-	if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN) || input->PushKey(DIK_RIGHT) || input->PushKey(DIK_LEFT))
+	if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A))
 	{
 		// 現在の座標を取得
 		playerPos = playerObj->GetPosition();
 
 		// 移動後の座標を計算
-		if (input->PushKey(DIK_UP)) { playerPos.z += 1.0f; cameraEye.z += 1.0f; cameraTarget.z += 1.0f; }
-		else if (input->PushKey(DIK_DOWN)) { playerPos.z -= 1.0f; cameraEye.z -= 1.0f; cameraTarget.z -= 1.0f;}
-		if (input->PushKey(DIK_RIGHT)) { playerPos.x += 1.0f; cameraEye.x += 1.0f; cameraTarget.x += 1.0f; }
-		else if (input->PushKey(DIK_LEFT)) { playerPos.x -= 1.0f; cameraEye.x -= 1.0f; cameraTarget.x -= 1.0f;}
+		if (input->PushKey(DIK_W)) { 
+			playerPos.z += 0.5f; 
+			cameraEye.z += 0.5f; 
+			cameraTarget.z += 0.5f;
+			playerPos.x -= 0.5f;
+			cameraEye.x -= 0.5f;
+			cameraTarget.x -= 0.5f;
+		}
+		else if (input->PushKey(DIK_S)) {
+			playerPos.z -= 0.5f;
+			cameraEye.z -= 0.5f;
+			cameraTarget.z -= 0.5f;
+			playerPos.x += 0.5f;
+			cameraEye.x += 0.5f;
+			cameraTarget.x += 0.5f;
+		}
+		if (input->PushKey(DIK_D)) {
+			playerPos.x += 0.5f;
+			cameraEye.x += 0.5f;
+			cameraTarget.x += 0.5f;
+			playerPos.z += 0.5f;
+			cameraEye.z += 0.5f;
+			cameraTarget.z += 0.5f;
+		}
+		else if (input->PushKey(DIK_A)) {
+			playerPos.x -= 0.5f;
+			cameraEye.x -= 0.5f;
+			cameraTarget.x -= 0.5f;
+			playerPos.z -= 0.5f;
+			cameraEye.z -= 0.5f;
+			cameraTarget.z -= 0.5f;
+		}
 
 		// 座標の変更を反映
 		playerObj->SetPosition(playerPos);
