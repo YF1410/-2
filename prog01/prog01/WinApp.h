@@ -1,6 +1,8 @@
 #pragma once
 #include <Windows.h>
 
+#define WINDOW_CLASS_NAME = "Impact";
+
 class WinApp
 {
 public: // Ã“Iƒƒ“ƒo•Ï”

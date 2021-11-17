@@ -6,6 +6,17 @@
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 
+#include <DirectXMath.h>
+#include "WinApp.h"
+
+using namespace DirectX;
+
+enum MouseButton {
+	Left,		//!< 左
+	Right,		//!< 右
+	Center,		//!< 真ん中
+};
+
 class Input
 {
 private:
@@ -22,9 +33,30 @@ public: //メンバ関数
 	// キーのトリガーをチェック
 	bool TriggerKey(BYTE keyNumber);
 
+	//キーボードデバイス生成
+	bool CreateKeyDevice(HINSTANCE hInstance, HWND hwnd);
+	//マウスデバイス生成
+	bool CreateMouceDevice(HINSTANCE hInstance, HWND hwnd);
+
+	// マウスの押下をチェック
+	bool PushMouse(MouseButton buttonType);
+	// マウスのトリガーをチェック
+	bool TriggerMouse(MouseButton buttonType);
+	//マウスの移動量取得
+	XMFLOAT2 GetMouseVelocity();
+	//マウスの位置取得
+	XMFLOAT2 GetMousePosition();
+
 private: //メンバ変数
+	HWND hwnd;
 	ComPtr<IDirectInput8> dinput;
 	ComPtr<IDirectInputDevice8> devkeyboard;
-	BYTE key[256] = {};
-	BYTE keyPre[256] = {};
+	ComPtr<IDirectInputDevice8> devmouse;
+	BYTE keyState[256] = {};
+	BYTE prevKeyState[256] = {};
+
+private:
+	static DIMOUSESTATE currentMouseState;
+	static DIMOUSESTATE prevMouseState;
+	static XMFLOAT2 mousePos;
 };

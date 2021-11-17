@@ -235,7 +235,7 @@ bool DirectXCommon::CreateSwapChain()
 	result = dxgiFactory->CreateSwapChainForHwnd
 	(
 		commandQueue.Get(),
-		winApp->GetHwnd(),
+		hwnd,
 		&swapchainDesc,
 		nullptr,
 		nullptr,
