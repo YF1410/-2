@@ -67,7 +67,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 	gameOver->SetSize({ 1280.0f,960.0f });
 
 	//.objの名前を指定してモデルを読み込む
-	playerModel = playerModel->CreateFromObject("punk");
+	playerModel = playerModel->CreateFromObject("player");
 	groundModel = groundModel->CreateFromObject("ground");
 
 	// 3Dオブジェクト生成
@@ -82,7 +82,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 	playerObj->SetRotation({ 0, -45.0f, 0 });
 	groundObj->SetModel(groundModel);
 	groundObj->SetPosition({ 0.0f, -5.0f, 0.0f });
-	groundObj->SetScale({ 15.0f, 15.0f, 15.0f });
+	groundObj->SetScale({ 2.5f, 2.5f, 2.5f });
+	groundObj->SetRotation({ 0, 180.0f, 0 });
 }
 
 void GameScene::Update() {
