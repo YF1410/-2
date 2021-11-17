@@ -132,7 +132,6 @@ void Object3d::CameraMoveEyeVector(XMFLOAT3 move)
 	SetEye(eye_moved);
 }
 
-
 void Object3d::InitializeCamera(int window_width, int window_height)
 {
 	// ƒrƒ…[s—ñ‚Ì¶¬

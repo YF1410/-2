@@ -84,10 +84,12 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 	groundObj->SetPosition({ 0.0f, -5.0f, 0.0f });
 	groundObj->SetScale({ 2.5f, 2.5f, 2.5f });
 	groundObj->SetRotation({ 0, 180.0f, 0 });
+
 }
 
 void GameScene::Update() {
 	Move();
+	avoidance();
 
 	playerObj->Update();
 	groundObj->Update();
@@ -134,47 +136,117 @@ void GameScene::Draw() {
 
 void GameScene::Move() {
 	XMFLOAT3 playerPos = playerObj->GetPosition();
-	XMFLOAT3 groundPos = groundObj->GetPosition();
 	XMFLOAT3 cameraEye = Object3d::GetEye();
 	XMFLOAT3 cameraTarget = Object3d::GetTarget();
 
 	// オブジェクト移動
 	// 移動後の座標を計算
-	if (input->PushKey(DIK_W)) {
-		playerPos.z += moveAmount;
-		cameraEye.z += moveAmount;
-		cameraTarget.z += moveAmount;
-		playerPos.x -= moveAmount;
-		cameraEye.x -= moveAmount;
-		cameraTarget.x -= moveAmount;
-	}
-	else if (input->PushKey(DIK_S)) {
-		playerPos.z -= moveAmount;
-		cameraEye.z -= moveAmount;
-		cameraTarget.z -= moveAmount;
-		playerPos.x += moveAmount;
-		cameraEye.x += moveAmount;
-		cameraTarget.x += moveAmount;
-	}
-	if (input->PushKey(DIK_D)) {
-		playerPos.x += moveAmount;
-		cameraEye.x += moveAmount;
-		cameraTarget.x += moveAmount;
-		playerPos.z += moveAmount;
-		cameraEye.z += moveAmount;
-		cameraTarget.z += moveAmount;
-	}
-	else if (input->PushKey(DIK_A)) {
-		playerPos.x -= moveAmount;
-		cameraEye.x -= moveAmount;
-		cameraTarget.x -= moveAmount;
-		playerPos.z -= moveAmount;
-		cameraEye.z -= moveAmount;
-		cameraTarget.z -= moveAmount;
+	if (avoidChange == 0) {
+		if (input->PushKey(DIK_W)) {
+			playerPos.z += moveAmount;
+			cameraEye.z += moveAmount;
+			cameraTarget.z += moveAmount;
+			playerPos.x -= moveAmount;
+			cameraEye.x -= moveAmount;
+			cameraTarget.x -= moveAmount;
+		} else if (input->PushKey(DIK_S)) {
+			playerPos.z -= moveAmount;
+			cameraEye.z -= moveAmount;
+			cameraTarget.z -= moveAmount;
+			playerPos.x += moveAmount;
+			cameraEye.x += moveAmount;
+			cameraTarget.x += moveAmount;
+		}
+		if (input->PushKey(DIK_D)) {
+			playerPos.x += moveAmount;
+			cameraEye.x += moveAmount;
+			cameraTarget.x += moveAmount;
+			playerPos.z += moveAmount;
+			cameraEye.z += moveAmount;
+			cameraTarget.z += moveAmount;
+		} else if (input->PushKey(DIK_A)) {
+			playerPos.x -= moveAmount;
+			cameraEye.x -= moveAmount;
+			cameraTarget.x -= moveAmount;
+			playerPos.z -= moveAmount;
+			cameraEye.z -= moveAmount;
+			cameraTarget.z -= moveAmount;
+		}
 	}
 
 	// 座標の変更を反映
 	playerObj->SetPosition(playerPos);
 	Object3d::SetEye(cameraEye);
 	Object3d::SetTarget(cameraTarget);
+}
+
+void GameScene::avoidance() {
+	XMFLOAT3 playerPos = playerObj->GetPosition();
+	XMFLOAT3 cameraEye = Object3d::GetEye();
+	XMFLOAT3 cameraTarget = Object3d::GetTarget();
+	if (input->TriggerKey(DIK_SPACE)) {
+		avoidChange = 1;
+	}
+
+	if (avoidChange != 0) {
+		nowTime += 0.01;
+		timeRate = min(nowTime / endTime, 1);
+	}
+
+	if (avoidChange == 1) {
+		if (input->PushKey(DIK_W)) {
+			avoidChange = 2;
+		} else if (input->PushKey(DIK_S)) {
+			avoidChange = 3;
+		}
+		if (input->PushKey(DIK_D)) {
+			avoidChange = 4;
+		} else if (input->PushKey(DIK_A)) {
+			avoidChange = 5;
+		}
+	}
+	if (avoidChange == 2) {
+		playerPos.z += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		cameraEye.z += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		cameraTarget.z += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		playerPos.x -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		cameraEye.x -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		cameraTarget.x -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+	}
+	if (avoidChange == 3) {
+		playerPos.z -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		cameraEye.z -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		cameraTarget.z -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		playerPos.x += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		cameraEye.x += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		cameraTarget.x += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+	}
+	if (avoidChange == 4) {
+		playerPos.z += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		cameraEye.z += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		cameraTarget.z += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		playerPos.x += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		cameraEye.x += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		cameraTarget.x += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+	}
+	if (avoidChange == 5) {
+		playerPos.z -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		cameraEye.z -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		cameraTarget.z -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		playerPos.x -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		cameraEye.x -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		cameraTarget.x -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+	}
+
+	// 座標の変更を反映
+	playerObj->SetPosition(playerPos);
+	Object3d::SetEye(cameraEye);
+	Object3d::SetTarget(cameraTarget);
+
+
+	if (timeRate == 1) {
+		nowTime = 0;
+		timeRate = 0;
+		avoidChange = false;
+	}
 }

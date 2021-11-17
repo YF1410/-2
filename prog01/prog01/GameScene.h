@@ -40,18 +40,20 @@ public: // メンバ関数
 	void resetPos();
 	// 描画
 	void Draw();
-
+	//移動
 	void Move();
+	//回避
+	void avoidance();
 
 private: // メンバ変数
 	DirectXCommon* dxCommon = nullptr;
 	Input* input = nullptr;
 	Audio* titleAudio = nullptr;
-	Audio *playAudio = nullptr;
-	Audio *gameoverAudio = nullptr;
-	Audio *carAudio = nullptr;
-	Audio *dangerAudio = nullptr;
-	Audio *deadAudio = nullptr;
+	Audio* playAudio = nullptr;
+	Audio* gameoverAudio = nullptr;
+	Audio* carAudio = nullptr;
+	Audio* dangerAudio = nullptr;
+	Audio* deadAudio = nullptr;
 	DebugText debugText;
 
 	// ゲームシーン用
@@ -59,9 +61,9 @@ private: // メンバ変数
 	Sprite* back1 = nullptr;
 	Sprite* back2 = nullptr;
 	Sprite* back3 = nullptr;
-	Sprite *title = nullptr;
-	Sprite *uiBack = nullptr;
-	Sprite *gameOver = nullptr;
+	Sprite* title = nullptr;
+	Sprite* uiBack = nullptr;
+	Sprite* gameOver = nullptr;
 	Model* playerModel = nullptr;
 	Model* groundModel = nullptr;
 	Object3d* playerObj = nullptr;
@@ -71,11 +73,9 @@ private: // メンバ変数
 	float groundScale = 15.0f;
 	float largeCarScale = 3.0f;
 	float scrollGround = 35.0f;
-	float scrollCar = 60.0f;
-	int scrollCount = 1;
 	float nowTime = 0;
-	float endTime = 1.0;
+	float endTime = 0.5;
 	float timeRate = 0;
-	bool isChange = false;
+	int avoidChange = 0;
 	float moveAmount = 1.0f;
 };
