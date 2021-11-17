@@ -20,8 +20,13 @@ ComPtr<ID3D12RootSignature> Object3d::rootsignature;
 ComPtr<ID3D12PipelineState> Object3d::pipelinestate;
 XMMATRIX Object3d::matView{};
 XMMATRIX Object3d::matProjection{};
+<<<<<<< HEAD
 XMFLOAT3 Object3d::eye = { 0.0f, 0.0f, -40.0f };//{ 5.0f, 20.0f, -40.0f };
 XMFLOAT3 Object3d::target = { 0, -3.0f, -25.0f };
+=======
+XMFLOAT3 Object3d::eye = { 45.0f, 90.0f, -45.0f };
+XMFLOAT3 Object3d::target = { 0.0f, 0.0f, 0.0f };
+>>>>>>> b70e58bdca0e0027d13d1edc426d082ea7ab0e2a
 XMFLOAT3 Object3d::up = { 0, 1, 0 };
 
 bool Object3d::StaticInitialize(ID3D12Device* device, int window_width, int window_height)
@@ -131,7 +136,6 @@ void Object3d::CameraMoveEyeVector(XMFLOAT3 move)
 
 	SetEye(eye_moved);
 }
-
 
 void Object3d::InitializeCamera(int window_width, int window_height)
 {

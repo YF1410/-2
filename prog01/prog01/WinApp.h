@@ -1,12 +1,14 @@
 #pragma once
 #include <Windows.h>
 
+#define WINDOW_CLASS_NAME = "Impact";
+
 class WinApp
 {
 public: // 静的メンバ変数
 	// ウィンドウサイズ
 	static const int window_width = 1280; // 横幅
-	static const int window_height = 960; // 縦幅
+	static const int window_height = 720; // 縦幅
 	static const wchar_t windowClassName[];
 
 public: // 静的メンバ関数

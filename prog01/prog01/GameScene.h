@@ -11,7 +11,11 @@
 #include "Model.h"
 #include "stdlib.h"
 #include "time.h"
+<<<<<<< HEAD
 #include "player.h"
+=======
+#include "Vector3.h"
+>>>>>>> b70e58bdca0e0027d13d1edc426d082ea7ab0e2a
 
 using namespace DirectX;
 
@@ -37,19 +41,28 @@ public: // メンバ関数
 	void Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio);
 	// 毎フレーム処理
 	void Update();
+<<<<<<< HEAD
 	
+=======
+	//pos初期化
+	void resetPos();
+>>>>>>> b70e58bdca0e0027d13d1edc426d082ea7ab0e2a
 	// 描画
 	void Draw();
+	//移動
+	void Move();
+	//回避
+	void avoidance();
 
 private: // メンバ変数
 	DirectXCommon* dxCommon = nullptr;
 	Input* input = nullptr;
 	Audio* titleAudio = nullptr;
-	Audio *playAudio = nullptr;
-	Audio *gameoverAudio = nullptr;
-	Audio *carAudio = nullptr;
-	Audio *dangerAudio = nullptr;
-	Audio *deadAudio = nullptr;
+	Audio* playAudio = nullptr;
+	Audio* gameoverAudio = nullptr;
+	Audio* carAudio = nullptr;
+	Audio* dangerAudio = nullptr;
+	Audio* deadAudio = nullptr;
 	DebugText debugText;
 
 	// ゲームシーン用
@@ -57,107 +70,28 @@ private: // メンバ変数
 	Sprite* back1 = nullptr;
 	Sprite* back2 = nullptr;
 	Sprite* back3 = nullptr;
-	Sprite *title = nullptr;
-	Sprite *noOnes0 = nullptr;
-	Sprite *noOnes1 = nullptr;
-	Sprite *noOnes2 = nullptr;
-	Sprite *noOnes3 = nullptr;
-	Sprite *noOnes4 = nullptr;
-	Sprite *noOnes5 = nullptr;
-	Sprite *noOnes6 = nullptr;
-	Sprite *noOnes7 = nullptr;
-	Sprite *noOnes8 = nullptr;
-	Sprite *noOnes9 = nullptr;
-	Sprite *noTens0 = nullptr;
-	Sprite *noTens1 = nullptr;
-	Sprite *noTens2 = nullptr;
-	Sprite *noTens3 = nullptr;
-	Sprite *noTens4 = nullptr;
-	Sprite *noTens5 = nullptr;
-	Sprite *noTens6 = nullptr;
-	Sprite *noTens7 = nullptr;
-	Sprite *noTens8 = nullptr;
-	Sprite *noTens9 = nullptr;
-	Sprite *noHundreds0 = nullptr;
-	Sprite *noHundreds1 = nullptr;
-	Sprite *noHundreds2 = nullptr;
-	Sprite *noHundreds3 = nullptr;
-	Sprite *noHundreds4 = nullptr;
-	Sprite *noHundreds5 = nullptr;
-	Sprite *noHundreds6 = nullptr;
-	Sprite *noHundreds7 = nullptr;
-	Sprite *noHundreds8 = nullptr;
-	Sprite *noHundreds9 = nullptr;
-	Sprite *uiBack = nullptr;
-	Sprite *gameOver = nullptr;
-	Sprite* warningMarkLT = nullptr;
-	Sprite* warningMarkLM = nullptr;
-	Sprite* warningMarkLB = nullptr;
-	Sprite* warningMarkRT = nullptr;
-	Sprite* warningMarkRM = nullptr;
-	Sprite* warningMarkRB = nullptr;
+	Sprite* title = nullptr;
+	Sprite* uiBack = nullptr;
+	Sprite* gameOver = nullptr;
 	Model* playerModel = nullptr;
-	Model* playerJumpLModel = nullptr;
-	Model* playerJumpRModel = nullptr;
-	Model* skydomeModel = nullptr;
 	Model* groundModel = nullptr;
-	Model* largeCarLModel = nullptr;
-	Model* largeCarRModel = nullptr;
-	Model* miniCarLModel = nullptr;
-	Model* miniCarRModel = nullptr;
-	Model* truckLModel = nullptr;
-	Model* truckRModel = nullptr;
 	Object3d* playerObj = nullptr;
-	Object3d* playerJumpLObj = nullptr;
-	Object3d* playerJumpRObj = nullptr;
-	Object3d* skydomeObj = nullptr;
 	Object3d* groundObj = nullptr;
-	Object3d* largeCarLObj[2] = { nullptr,nullptr };
-	Object3d* largeCarRObj[2] = { nullptr,nullptr };
-	Object3d* miniCarLObj[2] = { nullptr,nullptr };
-	Object3d* miniCarRObj[2] = { nullptr,nullptr };
-	Object3d* truckLObj[2] = { nullptr,nullptr };
-	Object3d* truckRObj[2] = { nullptr,nullptr };
+	XMFLOAT3 startPlayerPos;
+	XMFLOAT3 endPlayerPos;
+	XMFLOAT3 startCameraEye;
+	XMFLOAT3 endCameraEye;
+	XMFLOAT3 startCameraTarget;
+	XMFLOAT3 endCameraTarget;
 	int nowScene = 0;
 	float playerScale = 1.0f;
 	float groundScale = 15.0f;
 	float largeCarScale = 3.0f;
-	float miniCarScale = 2.6f;
-	float truckScale = 3.0f;
-	float carMove = 3.0f;
-	int carTypeR = 0;
-	int carTypeL = 0;
-	int activeCarNum = 0;
-	bool isJumpUp = false;
-	bool isJumpDown = false;
 	float scrollGround = 35.0f;
-	float scrollCar = 60.0f;
-	int scrollCount = 1;
-	float zMove = 1.0f;
-	float yMove = 0.5f;
-	int count = 0;
-	bool isRightLeg = true;
-	bool isLeftLeg = false;
-	int warningRWaitTime;
-	int warningLWaitTime;
-	bool isWarningRWait;
-	bool isWarningLWait;
-	bool isRightWarning;
-	bool isLeftWarning;
-	bool isRunCarR;
-	bool isRunCarL;
-	int blinkingR;//点滅用
-	int blinkingL;//点滅用
-	int blinkRCount;
-	int blinkLCount;
-	int blinking[6];//点滅用
 	float nowTime = 0;
-	float endTime = 1.0;
+	float endTime = 0.5;
 	float timeRate = 0;
-	bool isChange = false;
-	int scoreCountOne = 0;
-	int scoreCountTen = 0;
-	int scoreCountHundred = 0;
-	int soundCount = -10;
-	int soundCount2 = -10;
+	int avoidChange = 0;
+	float moveAmount = 1.0f;
+	float avoidMove = 40.0f;
 };
