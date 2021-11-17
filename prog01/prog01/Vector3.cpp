@@ -64,40 +64,40 @@ Vector3& Vector3::operator/=(float s) {
 	return *this;
 }
 
-const Vector3 operator+(const Vector3& v1, const Vector3& v2) {
-	Vector3 w;
+const XMFLOAT3 operator+(const XMFLOAT3& v1, const XMFLOAT3& v2) {
+	XMFLOAT3 w;
 	w.x = v1.x + v2.x;
 	w.y = v1.y + v2.y;
 	w.z = v1.z + v2.z;
 	return w;
 }
 
-const Vector3 operator-(const Vector3& v1, const Vector3& v2) {
-	Vector3 w;
+const XMFLOAT3 operator-(const XMFLOAT3& v1, const XMFLOAT3& v2) {
+	XMFLOAT3 w;
 	w.x = v1.x - v2.x;
 	w.y = v1.y - v2.y;
 	w.z = v1.z - v2.z;
 	return w;
 }
 
-const Vector3 operator*(const Vector3& v, float s) {
-	Vector3 w;
+const XMFLOAT3 operator*(const XMFLOAT3& v, float s) {
+	XMFLOAT3 w;
 	w.x = v.x * s;
 	w.y = v.y * s;
 	w.z = v.z * s;
 	return w;
 }
 
-const Vector3 operator*(float s, const Vector3& v) {
-	Vector3 w;
+const XMFLOAT3 operator*(float s, const XMFLOAT3& v) {
+	XMFLOAT3 w;
 	w.x = v.x * s;
 	w.y = v.y * s;
 	w.z = v.z * s;
 	return w;
 }
 
-const Vector3 operator/(const Vector3& v, float s) {
-	Vector3 w;
+const XMFLOAT3 operator/(const XMFLOAT3& v, float s) {
+	XMFLOAT3 w;
 	w.x = v.x / s;
 	w.y = v.y / s;
 	w.z = v.z / s;
@@ -105,30 +105,30 @@ const Vector3 operator/(const Vector3& v, float s) {
 }
 
 //ê¸å`ï‚ä‘
-const Vector3 lerp(const Vector3& start, const Vector3& end, const float t) {
+const XMFLOAT3 lerp(const XMFLOAT3& start, const XMFLOAT3& end, const float t) {
 	return start * (1.0 - t) + end * t;
 }
 
-const Vector3 easeInQuad(const Vector3& start, const Vector3& end, const float t) {
+const XMFLOAT3 easeInQuad(const XMFLOAT3& start, const XMFLOAT3& end, const float t) {
 	return start + (end - start) * (t * t);
 }
 
-const Vector3 easeOutQuad(const Vector3& start, const Vector3& end, const float t) {
+const XMFLOAT3 easeOutQuad(const XMFLOAT3& start, const XMFLOAT3& end, const float t) {
 	return start + (end - start) * (1 - (1 - t) * (1 - t));
 }
 
-const Vector3 easeInOutQuad(const Vector3& start, const Vector3& end, const float t) {
+const XMFLOAT3 easeInOutQuad(const XMFLOAT3& start, const XMFLOAT3& end, const float t) {
 	return start + (end - start) * (t < 0.5 ? 2 * t * t : 1 - pow(-2 * t + 2, 2) / 2);
 }
 
-const Vector3 easeInQuint(const Vector3& start, const Vector3& end, const float t) {
+const XMFLOAT3 easeInQuint(const XMFLOAT3& start, const XMFLOAT3& end, const float t) {
 	return start + (end - start) * pow(t, 5);
 }
 
-const Vector3 easeOutQuint(const Vector3& start, const Vector3& end, const float t) {
+const XMFLOAT3 easeOutQuint(const XMFLOAT3& start, const XMFLOAT3& end, const float t) {
 	return start + (end - start) * (1 - pow(1 - t, 5));
 }
 
-const Vector3 easeInOutQuint(const Vector3& start, const Vector3& end, const float t) {
+const XMFLOAT3 easeInOutQuint(const XMFLOAT3& start, const XMFLOAT3& end, const float t) {
 	return start + (end - start) * (t < 0.5 ? 16 * pow(t, 5) : 1 - pow(-2 * t + 2, 5) / 2);
 }

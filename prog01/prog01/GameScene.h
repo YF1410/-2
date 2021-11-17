@@ -11,6 +11,7 @@
 #include "Model.h"
 #include "stdlib.h"
 #include "time.h"
+#include "Vector3.h"
 
 using namespace DirectX;
 
@@ -68,6 +69,12 @@ private: // メンバ変数
 	Model* groundModel = nullptr;
 	Object3d* playerObj = nullptr;
 	Object3d* groundObj = nullptr;
+	XMFLOAT3 startPlayerPos;
+	XMFLOAT3 endPlayerPos;
+	XMFLOAT3 startCameraEye;
+	XMFLOAT3 endCameraEye;
+	XMFLOAT3 startCameraTarget;
+	XMFLOAT3 endCameraTarget;
 	int nowScene = 0;
 	float playerScale = 1.0f;
 	float groundScale = 15.0f;
@@ -78,4 +85,5 @@ private: // メンバ変数
 	float timeRate = 0;
 	int avoidChange = 0;
 	float moveAmount = 1.0f;
+	float avoidMove = 40.0f;
 };

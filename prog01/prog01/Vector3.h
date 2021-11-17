@@ -1,7 +1,5 @@
 #pragma once
 
-#include "SafeDelete.h"
-#include "DirectXCommon.h"
 #include <DirectXMath.h>
 
 using namespace DirectX;
@@ -32,18 +30,18 @@ public:
 
 //2項演算子オーバーロード
 //※いろんな引数(引数の型と順序)のパターンに対応するため、以下のように準備している
-const Vector3 operator+(const Vector3& v1, const Vector3& v2);
-const Vector3 operator-(const Vector3& v1, const Vector3& v2);
-const Vector3 operator*(const Vector3& v, float s);
-const Vector3 operator*(float s, const Vector3& v);
-const Vector3 operator/(const Vector3& v, float s);
+const XMFLOAT3 operator+(const XMFLOAT3& v1, const XMFLOAT3& v2);
+const XMFLOAT3 operator-(const XMFLOAT3& v1, const XMFLOAT3& v2);
+const XMFLOAT3 operator*(const XMFLOAT3& v, float s);
+const XMFLOAT3 operator*(float s, const XMFLOAT3& v);
+const XMFLOAT3 operator/(const XMFLOAT3& v, float s);
 
 //補間関数
 //線形補間(1次関数補間)
-const Vector3 lerp(const Vector3& start, const Vector3& end, const float t);
-const Vector3 easeInQuad(const Vector3& start, const Vector3& end, const float t);
-const Vector3 easeOutQuad(const Vector3& start, const Vector3& end, const float t);
-const Vector3 easeInOutQuad(const Vector3& start, const Vector3& end, const float t);
-const Vector3 easeInQuint(const Vector3& start, const Vector3& end, const float t);
-const Vector3 easeOutQuint(const Vector3& start, const Vector3& end, const float t);
-const Vector3 easeInOutQuint(const Vector3& start, const Vector3& end, const float t);
+const XMFLOAT3 lerp(const XMFLOAT3& start, const XMFLOAT3& end, const float t);
+const XMFLOAT3 easeInQuad(const XMFLOAT3& start, const XMFLOAT3& end, const float t);
+const XMFLOAT3 easeOutQuad(const XMFLOAT3& start, const XMFLOAT3& end, const float t);
+const XMFLOAT3 easeInOutQuad(const XMFLOAT3& start, const XMFLOAT3& end, const float t);
+const XMFLOAT3 easeInQuint(const XMFLOAT3& start, const XMFLOAT3& end, const float t);
+const XMFLOAT3 easeOutQuint(const XMFLOAT3& start, const XMFLOAT3& end, const float t);
+const XMFLOAT3 easeInOutQuint(const XMFLOAT3& start, const XMFLOAT3& end, const float t);

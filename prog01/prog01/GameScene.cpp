@@ -184,8 +184,14 @@ void GameScene::avoidance() {
 	XMFLOAT3 playerPos = playerObj->GetPosition();
 	XMFLOAT3 cameraEye = Object3d::GetEye();
 	XMFLOAT3 cameraTarget = Object3d::GetTarget();
-	if (input->TriggerKey(DIK_SPACE)) {
+	if (input->TriggerKey(DIK_SPACE)&&avoidChange == 0) {
 		avoidChange = 1;
+		startPlayerPos = playerPos;
+		startCameraEye = cameraEye;
+		startCameraTarget = cameraTarget;
+		endPlayerPos = playerPos;
+		endCameraEye = cameraEye;
+		endCameraTarget = cameraTarget;
 	}
 
 	if (avoidChange != 0) {
@@ -196,46 +202,59 @@ void GameScene::avoidance() {
 	if (avoidChange == 1) {
 		if (input->PushKey(DIK_W)) {
 			avoidChange = 2;
+			endPlayerPos.z = startPlayerPos.z + avoidMove;
+			endCameraEye.z = startCameraEye.z + avoidMove;
+			endCameraTarget.z = startCameraTarget.z + avoidMove;
+			endPlayerPos.x = startPlayerPos.x - avoidMove;
+			endCameraEye.x = startCameraEye.x - avoidMove;
+			endCameraTarget.x = startCameraTarget.x - avoidMove;
+
 		} else if (input->PushKey(DIK_S)) {
 			avoidChange = 3;
+			endPlayerPos.z = startPlayerPos.z - avoidMove;
+			endCameraEye.z = startCameraEye.z - avoidMove;
+			endCameraTarget.z = startCameraTarget.z - avoidMove;
+			endPlayerPos.x = startPlayerPos.x + avoidMove;
+			endCameraEye.x = startCameraEye.x + avoidMove;
+			endCameraTarget.x = startCameraTarget.x + avoidMove;
 		}
 		if (input->PushKey(DIK_D)) {
 			avoidChange = 4;
+			endPlayerPos.z = startPlayerPos.z + avoidMove;
+			endCameraEye.z = startCameraEye.z + avoidMove;
+			endCameraTarget.z = startCameraTarget.z + avoidMove;
+			endPlayerPos.x = startPlayerPos.x + avoidMove;
+			endCameraEye.x = startCameraEye.x + avoidMove;
+			endCameraTarget.x = startCameraTarget.x + avoidMove;
 		} else if (input->PushKey(DIK_A)) {
 			avoidChange = 5;
+			endPlayerPos.z = startPlayerPos.z - avoidMove;
+			endCameraEye.z = startCameraEye.z - avoidMove;
+			endCameraTarget.z = startCameraTarget.z - avoidMove;
+			endPlayerPos.x = startPlayerPos.x - avoidMove;
+			endCameraEye.x = startCameraEye.x - avoidMove;
+			endCameraTarget.x = startCameraTarget.x - avoidMove;
 		}
 	}
 	if (avoidChange == 2) {
-		playerPos.z += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		cameraEye.z += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		cameraTarget.z += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		playerPos.x -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		cameraEye.x -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		cameraTarget.x -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		playerPos = easeOutQuint(startPlayerPos, endPlayerPos, timeRate);
+		cameraEye = easeOutQuint(startCameraEye, endCameraEye, timeRate);
+		cameraTarget = easeOutQuint(startCameraTarget, endCameraTarget, timeRate);
 	}
 	if (avoidChange == 3) {
-		playerPos.z -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		cameraEye.z -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		cameraTarget.z -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		playerPos.x += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		cameraEye.x += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		cameraTarget.x += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		playerPos = easeOutQuint(startPlayerPos, endPlayerPos, timeRate);
+		cameraEye = easeOutQuint(startCameraEye, endCameraEye, timeRate);
+		cameraTarget = easeOutQuint(startCameraTarget, endCameraTarget, timeRate);
 	}
 	if (avoidChange == 4) {
-		playerPos.z += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		cameraEye.z += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		cameraTarget.z += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		playerPos.x += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		cameraEye.x += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		cameraTarget.x += 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		playerPos = easeOutQuint(startPlayerPos, endPlayerPos, timeRate);
+		cameraEye = easeOutQuint(startCameraEye, endCameraEye, timeRate);
+		cameraTarget = easeOutQuint(startCameraTarget, endCameraTarget, timeRate);
 	}
 	if (avoidChange == 5) {
-		playerPos.z -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		cameraEye.z -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		cameraTarget.z -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		playerPos.x -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		cameraEye.x -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
-		cameraTarget.x -= 0 * (1.0 - (timeRate * (2.0 - timeRate))) + 2 * (timeRate * (2.0 - timeRate));
+		playerPos = easeOutQuint(startPlayerPos, endPlayerPos, timeRate);
+		cameraEye = easeOutQuint(startCameraEye, endCameraEye, timeRate);
+		cameraTarget = easeOutQuint(startCameraTarget, endCameraTarget, timeRate);
 	}
 
 	// 座標の変更を反映
