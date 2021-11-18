@@ -11,11 +11,7 @@
 #include "Model.h"
 #include "stdlib.h"
 #include "time.h"
-<<<<<<< HEAD
-#include "player.h"
-=======
 #include "Vector3.h"
->>>>>>> b70e58bdca0e0027d13d1edc426d082ea7ab0e2a
 
 using namespace DirectX;
 
@@ -41,12 +37,8 @@ public: // メンバ関数
 	void Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio);
 	// 毎フレーム処理
 	void Update();
-<<<<<<< HEAD
-	
-=======
 	//pos初期化
 	void resetPos();
->>>>>>> b70e58bdca0e0027d13d1edc426d082ea7ab0e2a
 	// 描画
 	void Draw();
 	//移動

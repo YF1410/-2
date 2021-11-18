@@ -34,51 +34,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 	}
 	// デバッグテキスト初期化
 	debugText.Initialize(debugTextTexNumber);
-<<<<<<< HEAD
-	playerModel = playerModel->CreateFromObject("player");
-	playerObj = Object3d::Create();
-	playerObj->SetModel(playerModel);
-	playerObj->SetPosition({ 0.0f, 0.0f, 0.0f });
-	// 前景スプライト生成
-	
-	
-
-	
-	
-}
-
-void GameScene::Update() {
-	//移動処理
-	XMFLOAT3 PlayerPos = playerObj->GetPosition();
-	
-	//前移動
-	if (input->PushKey(DIK_W))
-	{
-		PlayerPos.y += 0.5;
-	}
-	//後ろ移動
-	else if (input->PushKey(DIK_S))
-	{
-		PlayerPos.y -= 0.5;
-	}
-	//左移動
-	if (input->PushKey(DIK_A))
-	{
-		PlayerPos.x -= 0.5;
-	}
-	//右移動
-	else if (input->PushKey(DIK_D))
-	{
-		PlayerPos.x += 0.5;
-	}
-	playerObj->SetPosition(PlayerPos);
-	playerObj->Update();
-}
-
-
-
-
-=======
 
 	// テクスチャ読み込み
 	if (!Sprite::LoadTexture(1, L"Resources/warningMark.png")) {
@@ -143,16 +98,11 @@ void GameScene::Update() {
 void GameScene::resetPos() {
 	playerObj->SetPosition({ 0.0f, 0.0f, 0.0f });
 }
->>>>>>> b70e58bdca0e0027d13d1edc426d082ea7ab0e2a
 
 void GameScene::Draw() {
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* cmdList = dxCommon->GetCommandList();
-<<<<<<< HEAD
-	
-=======
 	//XMFLOAT3 playerPos = playerObj->GetPosition();
->>>>>>> b70e58bdca0e0027d13d1edc426d082ea7ab0e2a
 #pragma region 背景スプライト描画
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(dxCommon->GetCommandList());
@@ -168,11 +118,7 @@ void GameScene::Draw() {
 	Object3d::PreDraw(dxCommon->GetCommandList());
 	// 3Dオブクジェクトの描画
 	playerObj->Draw();
-<<<<<<< HEAD
-	
-=======
 	groundObj->Draw();
->>>>>>> b70e58bdca0e0027d13d1edc426d082ea7ab0e2a
 	// 3Dオブジェクト描画後処理
 	Object3d::PostDraw();
 #pragma endregion 3Dオブジェクト描画
@@ -180,11 +126,7 @@ void GameScene::Draw() {
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(dxCommon->GetCommandList());
 	// 前景スプライトの描画
-<<<<<<< HEAD
-	
-=======
 
->>>>>>> b70e58bdca0e0027d13d1edc426d082ea7ab0e2a
 	// デバッグテキストの描画
 	debugText.DrawAll(dxCommon->GetCommandList());
 	// スプライト描画後処理
@@ -207,7 +149,8 @@ void GameScene::Move() {
 			playerPos.x -= moveAmount;
 			cameraEye.x -= moveAmount;
 			cameraTarget.x -= moveAmount;
-		} else if (input->PushKey(DIK_S)) {
+		}
+		else if (input->PushKey(DIK_S)) {
 			playerPos.z -= moveAmount;
 			cameraEye.z -= moveAmount;
 			cameraTarget.z -= moveAmount;
@@ -222,7 +165,8 @@ void GameScene::Move() {
 			playerPos.z += moveAmount;
 			cameraEye.z += moveAmount;
 			cameraTarget.z += moveAmount;
-		} else if (input->PushKey(DIK_A)) {
+		}
+		else if (input->PushKey(DIK_A)) {
 			playerPos.x -= moveAmount;
 			cameraEye.x -= moveAmount;
 			cameraTarget.x -= moveAmount;
@@ -242,7 +186,7 @@ void GameScene::avoidance() {
 	XMFLOAT3 playerPos = playerObj->GetPosition();
 	XMFLOAT3 cameraEye = Object3d::GetEye();
 	XMFLOAT3 cameraTarget = Object3d::GetTarget();
-	if (input->TriggerKey(DIK_SPACE)&&avoidChange == 0) {
+	if (input->TriggerKey(DIK_SPACE) && avoidChange == 0) {
 		avoidChange = 1;
 		startPlayerPos = playerPos;
 		startCameraEye = cameraEye;
@@ -267,7 +211,8 @@ void GameScene::avoidance() {
 			endCameraEye.x = startCameraEye.x - avoidMove;
 			endCameraTarget.x = startCameraTarget.x - avoidMove;
 
-		} else if (input->PushKey(DIK_S)) {
+		}
+		else if (input->PushKey(DIK_S)) {
 			avoidChange = 3;
 			endPlayerPos.z = startPlayerPos.z - avoidMove;
 			endCameraEye.z = startCameraEye.z - avoidMove;
@@ -284,7 +229,8 @@ void GameScene::avoidance() {
 			endPlayerPos.x = startPlayerPos.x + avoidMove;
 			endCameraEye.x = startCameraEye.x + avoidMove;
 			endCameraTarget.x = startCameraTarget.x + avoidMove;
-		} else if (input->PushKey(DIK_A)) {
+		}
+		else if (input->PushKey(DIK_A)) {
 			avoidChange = 5;
 			endPlayerPos.z = startPlayerPos.z - avoidMove;
 			endCameraEye.z = startCameraEye.z - avoidMove;
