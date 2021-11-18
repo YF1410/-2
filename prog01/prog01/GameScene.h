@@ -45,6 +45,8 @@ public: // メンバ関数
 	void Move();
 	//回避
 	void avoidance();
+	//当たり判定
+	void collision();
 
 private: // メンバ変数
 	DirectXCommon* dxCommon = nullptr;
@@ -67,8 +69,14 @@ private: // メンバ変数
 	Sprite* gameOver = nullptr;
 	Model* playerModel = nullptr;
 	Model* groundModel = nullptr;
+	Model* bossModel = nullptr;
 	Object3d* playerObj = nullptr;
 	Object3d* groundObj = nullptr;
+	Object3d* bossObj = nullptr;
+	XMFLOAT3 playerPos;
+	XMFLOAT3 playerRot;
+	XMFLOAT3 cameraEye;
+	XMFLOAT3 cameraTarget;
 	XMFLOAT3 startPlayerPos;
 	XMFLOAT3 endPlayerPos;
 	XMFLOAT3 startCameraEye;
