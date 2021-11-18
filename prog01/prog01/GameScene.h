@@ -46,6 +46,9 @@ public: // メンバ関数
 	//回避
 	void avoidance();
 
+	//boss突撃
+	void rush();
+
 private: // メンバ変数
 	DirectXCommon* dxCommon = nullptr;
 	Input* input = nullptr;
@@ -66,24 +69,48 @@ private: // メンバ変数
 	Sprite* uiBack = nullptr;
 	Sprite* gameOver = nullptr;
 	Model* playerModel = nullptr;
+	Model* player_attack_befor_Model = nullptr;
+	Model* player_attack_after_Model = nullptr;
+	Model* player_dash_Model = nullptr;
+
+	Model* bossModel = nullptr;
+	Model* boss_rush_befor_Model = nullptr;
+	Model* boss_rush_after_Model = nullptr;
+
 	Model* groundModel = nullptr;
+
 	Object3d* playerObj = nullptr;
+	Object3d* bossObj = nullptr;
 	Object3d* groundObj = nullptr;
+	XMFLOAT3 playerpos;
 	XMFLOAT3 startPlayerPos;
 	XMFLOAT3 endPlayerPos;
+
+	XMFLOAT3 startbossPos;
+	XMFLOAT3 endbossPos;
 	XMFLOAT3 startCameraEye;
 	XMFLOAT3 endCameraEye;
 	XMFLOAT3 startCameraTarget;
 	XMFLOAT3 endCameraTarget;
 	int nowScene = 0;
+	int charapose = 0;
+	int bosspose = 0;
+
+	bool attack_flag = false;
+	bool boss_rush_flag = false;
+	float bossframe = 0.0f;
+	float frame = 0.0f;
 	float playerScale = 1.0f;
 	float groundScale = 15.0f;
 	float largeCarScale = 3.0f;
 	float scrollGround = 35.0f;
 	float nowTime = 0;
 	float endTime = 0.5;
+	float countdown = 60;
+	float rushendTime = 1.0;
 	float timeRate = 0;
 	int avoidChange = 0;
+	int rushCange = 0;
 	float moveAmount = 1.0f;
 	float avoidMove = 40.0f;
 };
