@@ -20,7 +20,7 @@ ComPtr<ID3D12RootSignature> Object3d::rootsignature;
 ComPtr<ID3D12PipelineState> Object3d::pipelinestate;
 XMMATRIX Object3d::matView{};
 XMMATRIX Object3d::matProjection{};
-XMFLOAT3 Object3d::eye = { 45.0f, 90.0f, -45.0f };
+XMFLOAT3 Object3d::eye = { 90.0f, 135.0f, -90.0f };
 XMFLOAT3 Object3d::target = { 0.0f, 0.0f, 0.0f };
 XMFLOAT3 Object3d::up = { 0, 1, 0 };
 
