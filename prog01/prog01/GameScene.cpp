@@ -12,6 +12,9 @@ GameScene::~GameScene() {
 	safe_delete(title);
 	safe_delete(uiBack);
 	safe_delete(gameOver);
+	safe_delete(player_attack_befor_Model);
+	safe_delete(player_attack_after_Model);
+	safe_delete(player_dash_Model);
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) {
@@ -67,9 +70,17 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 	gameOver->SetSize({ 1280.0f,960.0f });
 
 	//.objの名前を指定してモデルを読み込む
+	//player
 	playerModel = playerModel->CreateFromObject("player");
-	groundModel = groundModel->CreateFromObject("ground");
+	player_attack_befor_Model = player_attack_befor_Model->CreateFromObject("player_attack_befor");
+	player_attack_after_Model = player_attack_after_Model->CreateFromObject("player_attack_after");
+	player_dash_Model = player_dash_Model->CreateFromObject("player_dash");
+	//boss
 	bossModel = bossModel->CreateFromObject("boss");
+	boss_rush_befor_Model = boss_rush_befor_Model->CreateFromObject("boss_rush_befor");
+	boss_rush_after_Model = boss_rush_after_Model->CreateFromObject("boss_rush_after");
+	//stage
+	groundModel = groundModel->CreateFromObject("ground");
 
 	// 3Dオブジェクト生成
 	playerObj = Object3d::Create();
@@ -93,6 +104,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 
 	playerPos = playerObj->GetPosition();
 	playerRot = playerObj->GetRotation();
+	bossPos = bossObj->GetPosition();
+	bossRot = bossObj->GetRotation();
 	cameraEye = Object3d::GetEye();
 	cameraTarget = Object3d::GetTarget();
 }
@@ -100,6 +113,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 void GameScene::Update() {
 	Move();
 	avoidance();
+	playerAttack();
 	collision();
 
 	playerObj->Update();
@@ -129,6 +143,31 @@ void GameScene::Draw() {
 	// 3Dオブジェクト描画前処理
 	Object3d::PreDraw(dxCommon->GetCommandList());
 	// 3Dオブクジェクトの描画
+	if (charapose == 0)
+	{
+		playerObj->SetModel(playerModel);
+	} else if (charapose == 1)
+	{
+		playerObj->SetModel(player_attack_befor_Model);
+	} else if (charapose == 2)
+	{
+		playerObj->SetModel(player_attack_after_Model);
+	} else if (charapose == 3)
+	{
+		playerObj->SetModel(player_dash_Model);
+	}
+
+	if (bosspose == 0)
+	{
+		bossObj->SetModel(bossModel);
+	} else if (bosspose == 1)
+	{
+		bossObj->SetModel(boss_rush_befor_Model);
+	} else if (bosspose == 2)
+	{
+		bossObj->SetModel(boss_rush_after_Model);
+	}
+
 	playerObj->Draw();
 	groundObj->Draw();
 	bossObj->Draw();
@@ -150,7 +189,7 @@ void GameScene::Draw() {
 void GameScene::Move() {
 	// オブジェクト移動
 	// 移動後の座標を計算
-	if (avoidChange == 0) {
+	if (playerMode == 0) {
 		if (input->PushKey(DIK_W)) {
 			playerPos.z += moveAmount;
 			cameraEye.z += moveAmount;
@@ -231,8 +270,8 @@ void GameScene::Move() {
 }
 
 void GameScene::avoidance() {
-	if (input->TriggerKey(DIK_SPACE) && avoidChange == 0) {
-		avoidChange = 1;
+	if (input->TriggerKey(DIK_SPACE) && playerMode == 0) {
+		playerMode = 1;
 		startPlayerPos = playerPos;
 		startCameraEye = cameraEye;
 		startCameraTarget = cameraTarget;
@@ -241,13 +280,14 @@ void GameScene::avoidance() {
 		endCameraTarget = cameraTarget;
 	}
 
-	if (avoidChange != 0) {
+	if (playerMode != 0) {
 		nowTime += 0.01;
 		timeRate = min(nowTime / endTime, 1);
 	}
 
-	if (avoidChange == 1) {
+	if (playerMode == 1) {
 		if (input->PushKey(DIK_W)) {
+			playerMode = 2;
 			endPlayerPos.z = startPlayerPos.z + avoidMove;
 			endCameraEye.z = startCameraEye.z + avoidMove;
 			endCameraTarget.z = startCameraTarget.z + avoidMove;
@@ -264,6 +304,7 @@ void GameScene::avoidance() {
 				endCameraTarget.z = startCameraTarget.z;
 			}
 		} else if (input->PushKey(DIK_S)) {
+			playerMode = 2;
 			endPlayerPos.z = startPlayerPos.z - avoidMove;
 			endCameraEye.z = startCameraEye.z - avoidMove;
 			endCameraTarget.z = startCameraTarget.z - avoidMove;
@@ -280,6 +321,7 @@ void GameScene::avoidance() {
 				endCameraTarget.x = startCameraTarget.x;
 			}
 		} else if (input->PushKey(DIK_D)) {
+			playerMode = 2;
 			endPlayerPos.z = startPlayerPos.z + avoidMove;
 			endCameraEye.z = startCameraEye.z + avoidMove;
 			endCameraTarget.z = startCameraTarget.z + avoidMove;
@@ -287,6 +329,7 @@ void GameScene::avoidance() {
 			endCameraEye.x = startCameraEye.x + avoidMove;
 			endCameraTarget.x = startCameraTarget.x + avoidMove;
 		} else if (input->PushKey(DIK_A)) {
+			playerMode = 2;
 			endPlayerPos.z = startPlayerPos.z - avoidMove;
 			endCameraEye.z = startCameraEye.z - avoidMove;
 			endCameraTarget.z = startCameraTarget.z - avoidMove;
@@ -294,9 +337,9 @@ void GameScene::avoidance() {
 			endCameraEye.x = startCameraEye.x - avoidMove;
 			endCameraTarget.x = startCameraTarget.x - avoidMove;
 		}
-		avoidChange = 2;
 	}
-	if (avoidChange == 2) {
+	if (playerMode == 2) {
+		charapose = 3;
 		playerPos = easeOutQuint(startPlayerPos, endPlayerPos, timeRate);
 		cameraEye = easeOutQuint(startCameraEye, endCameraEye, timeRate);
 		cameraTarget = easeOutQuint(startCameraTarget, endCameraTarget, timeRate);
@@ -310,10 +353,91 @@ void GameScene::avoidance() {
 	if (timeRate == 1) {
 		nowTime = 0;
 		timeRate = 0;
-		avoidChange = 0;
+		playerMode = 0;
+		charapose = 0;
+	}
+}
+
+void GameScene::playerAttack() {
+	if (input->TriggerKey(DIK_Q) && attack_flag == false)
+	{
+		attack_flag = true;
+		playerMode = 3;
+	}
+	if (attack_flag == true)
+	{
+		frame++;
+	}
+	if (frame < 24 && attack_flag == true)
+	{
+		charapose = 1;
+	} else if (frame >= 24 && frame < 60 && attack_flag == true) {
+		charapose = 2;
+	} else if (frame >= 60 && attack_flag == true) {
+		frame = 0;
+		attack_flag = false;
+		charapose = 0;
 	}
 }
 
 void GameScene::collision() {
 
+}
+
+void GameScene::bossAttack() {
+	if (countDown <= 0 && rushChange == 0) {
+		rushChange = 1;
+		startBossPos = bossPos;
+		endBossPos = bossPos;
+	}
+
+	if (rushChange != 0) {
+		nowTime += 0.01;
+		timeRate = min(nowTime / rushEndTime, 1);
+		bossframe++;
+		if (bossframe < 34)
+		{
+			bosspose = 1;
+		}
+	}
+
+	if (rushChange == 1) {
+		if (input->PushKey(DIK_UP)) {
+			endBossPos.z = startBossPos.z + avoidMove;
+			endBossPos.x = startBossPos.x - avoidMove;
+
+		} else if (input->PushKey(DIK_DOWN)) {
+			endBossPos.z = startBossPos.z - avoidMove;
+			endBossPos.x = startBossPos.x + avoidMove;
+		}
+		if (input->PushKey(DIK_RIGHT)) {
+			endBossPos.z = startBossPos.z + avoidMove;
+			endBossPos.x = startBossPos.x + avoidMove;
+		} else if (input->PushKey(DIK_LEFT)) {
+			endBossPos.z = startBossPos.z - avoidMove;
+			endBossPos.x = startBossPos.x - avoidMove;
+		}
+
+		rushChange = 2;
+	}
+	if (rushChange == 2) {
+		bossPos = easeOutQuint(startBossPos, endBossPos, timeRate);
+	}
+
+	// 座標の変更を反映
+	bossObj->SetPosition(bossPos);
+
+	if (bossframe >= 34 && bossframe < 80){
+		bosspose = 2;
+	}
+
+	if (timeRate == 1) {
+		nowTime = 0;
+		timeRate = 0;
+		rushChange = false;
+		boss_rush_flag = false;
+		bossframe = 0;
+		bosspose = 0;
+		countDown = 60;
+	}
 }
