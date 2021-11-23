@@ -168,9 +168,13 @@ void GameScene::Draw() {
 		bossObj->SetModel(boss_rush_after_Model);
 	}
 
-	playerObj->Draw();
+	if (playerHp > 0) {
+		playerObj->Draw();
+	}
 	groundObj->Draw();
-	bossObj->Draw();
+	if (bossHp > 0) {
+		bossObj->Draw();
+	}
 	// 3Dオブジェクト描画後処理
 	Object3d::PostDraw();
 #pragma endregion 3Dオブジェクト描画
@@ -281,7 +285,7 @@ void GameScene::avoidance() {
 	}
 
 	if (playerMode != 0) {
-		nowTime += 0.01;
+		nowTime += 0.01f;
 		timeRate = min(nowTime / endTime, 1);
 	}
 
@@ -368,20 +372,22 @@ void GameScene::playerAttack() {
 	{
 		frame++;
 	}
+
 	if (frame < 24 && attack_flag == true)
 	{
 		charapose = 1;
 	} else if (frame >= 24 && frame < 60 && attack_flag == true) {
 		charapose = 2;
+
 	} else if (frame >= 60 && attack_flag == true) {
 		frame = 0;
 		attack_flag = false;
 		charapose = 0;
 	}
-}
 
-void GameScene::collision() {
-
+	if (frame == 48 && collisionFlag == true) {
+		bossHp -= 1;
+	}
 }
 
 void GameScene::bossAttack() {
@@ -392,7 +398,7 @@ void GameScene::bossAttack() {
 	}
 
 	if (rushChange != 0) {
-		nowTime += 0.01;
+		nowTime += 0.01f;
 		timeRate = min(nowTime / rushEndTime, 1);
 		bossframe++;
 		if (bossframe < 34)
@@ -427,7 +433,7 @@ void GameScene::bossAttack() {
 	// 座標の変更を反映
 	bossObj->SetPosition(bossPos);
 
-	if (bossframe >= 34 && bossframe < 80){
+	if (bossframe >= 34 && bossframe < 80) {
 		bosspose = 2;
 	}
 
@@ -439,5 +445,20 @@ void GameScene::bossAttack() {
 		bossframe = 0;
 		bosspose = 0;
 		countDown = 60;
+	}
+}
+
+void GameScene::collision() {
+	playerRadius = 15.0f;
+	bossRadius = 15.0f;
+	collisionX = playerPos.x - bossPos.x;
+	collisionZ = playerPos.z - bossPos.z;
+	Collision = sqrtf((collisionX * collisionX) + (collisionZ * collisionZ));
+
+	if (Collision <= playerRadius + bossRadius) {
+		collisionFlag = true;
+	}
+	else {
+		collisionFlag = false;
 	}
 }

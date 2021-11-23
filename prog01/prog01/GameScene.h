@@ -84,6 +84,7 @@ private: // メンバ変数
 	Object3d* playerObj = nullptr;
 	Object3d* groundObj = nullptr;
 	Object3d* bossObj = nullptr;
+
 	XMFLOAT3 playerPos;
 	XMFLOAT3 playerRot;
 	XMFLOAT3 startPlayerPos;
@@ -100,6 +101,7 @@ private: // メンバ変数
 	XMFLOAT3 bossRot;
 	XMFLOAT3 startBossPos;
 	XMFLOAT3 endBossPos;
+
 	int nowScene = 0;
 	int charapose = 0;
 	int bosspose = 0;
@@ -122,4 +124,14 @@ private: // メンバ変数
 	float avoidMove = 40.0f;
 	float countDown = 60;
 	float rushEndTime = 0;
+
+	float playerRadius = 0;
+	float bossRadius = 0;
+	float collisionX = 0;
+	float collisionZ = 0;
+	float Collision = 0;
+	bool collisionFlag = 0;
+
+	int playerHp = 3;
+	int bossHp = 3;
 };
