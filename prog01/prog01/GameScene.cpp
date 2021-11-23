@@ -112,6 +112,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 
 void GameScene::Update() {
 	Move();
+	bossRotation();
 	avoidance();
 	playerAttack();
 	collision();
@@ -461,4 +462,14 @@ void GameScene::collision() {
 	else {
 		collisionFlag = false;
 	}
+}
+
+void GameScene::bossRotation() {
+	XMFLOAT3 bossPos = bossObj->GetPosition();
+
+	XMFLOAT3 playerPos = playerObj->GetPosition();
+
+	float angleY = angle->PosForAngle(bossPos.x, bossPos.z, playerPos.x, playerPos.z);
+
+	bossObj->SetRotation({ 0,XMConvertToDegrees(angleY), 0 });
 }

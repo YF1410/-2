@@ -12,6 +12,7 @@
 #include "stdlib.h"
 #include "time.h"
 #include "Vector3.h"
+#include "Angle.h"
 
 using namespace DirectX;
 
@@ -51,11 +52,13 @@ public: // メンバ関数
 	void collision();
 	//boss攻撃
 	void bossAttack();
-
+	//boss向き調整
+	void bossRotation();
 
 private: // メンバ変数
 	DirectXCommon* dxCommon = nullptr;
 	Input* input = nullptr;
+	Angle* angle = new Angle();
 	Audio* titleAudio = nullptr;
 	Audio* playAudio = nullptr;
 	Audio* gameoverAudio = nullptr;

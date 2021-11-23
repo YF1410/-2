@@ -53,6 +53,7 @@ void Input::Update() {
 	// •ÏŠ·‚µ‚½À•W‚ğ•Û‘¶
 	mousePos.x = (float)p.x;
 	mousePos.y = (float)p.y;
+	//ShowCursor(false);
 }
 
 XMFLOAT2 Input::GetMouseVelocity() {
