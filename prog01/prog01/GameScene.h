@@ -118,15 +118,17 @@ private: // メンバ変数
 	float groundScale = 15.0f;
 	float largeCarScale = 3.0f;
 	float scrollGround = 35.0f;
-	float nowTime = 0;
-	float endTime = 0.5;
-	float timeRate = 0;
+	float avoidNowTime = 0;
+	float avoidEndTime = 0.5f;
+	float avoidTimeRate = 0;
 	int playerMode = 0;
 	int rushChange = 0;
 	float moveAmount = 1.0f;
 	float avoidMove = 40.0f;
 	float countDown = 60;
-	float rushEndTime = 0;
+	float rushNowTime = 0;
+	float rushEndTime = 0.5;
+	float rushTimeRate = 0;
 
 	float playerRadius = 0;
 	float bossRadius = 0;

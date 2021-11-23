@@ -116,6 +116,7 @@ void GameScene::Update() {
 	avoidance();
 	playerAttack();
 	collision();
+	bossAttack();
 
 	playerObj->Update();
 	groundObj->Update();
@@ -286,8 +287,8 @@ void GameScene::avoidance() {
 	}
 
 	if (playerMode != 0) {
-		nowTime += 0.01f;
-		timeRate = min(nowTime / endTime, 1);
+		avoidNowTime += 0.01f;
+		avoidTimeRate = min(avoidNowTime / avoidEndTime, 1);
 	}
 
 	if (playerMode == 1) {
@@ -345,9 +346,9 @@ void GameScene::avoidance() {
 	}
 	if (playerMode == 2) {
 		charapose = 3;
-		playerPos = easeOutQuint(startPlayerPos, endPlayerPos, timeRate);
-		cameraEye = easeOutQuint(startCameraEye, endCameraEye, timeRate);
-		cameraTarget = easeOutQuint(startCameraTarget, endCameraTarget, timeRate);
+		playerPos = easeOutQuint(startPlayerPos, endPlayerPos, avoidTimeRate);
+		cameraEye = easeOutQuint(startCameraEye, endCameraEye, avoidTimeRate);
+		cameraTarget = easeOutQuint(startCameraTarget, endCameraTarget, avoidTimeRate);
 	}
 
 	// 座標の変更を反映
@@ -355,9 +356,9 @@ void GameScene::avoidance() {
 	Object3d::SetEye(cameraEye);
 	Object3d::SetTarget(cameraTarget);
 
-	if (timeRate == 1) {
-		nowTime = 0;
-		timeRate = 0;
+	if (avoidTimeRate == 1) {
+		avoidNowTime = 0;
+		avoidTimeRate = 0;
 		playerMode = 0;
 		charapose = 0;
 	}
@@ -392,15 +393,23 @@ void GameScene::playerAttack() {
 }
 
 void GameScene::bossAttack() {
-	if (countDown <= 0 && rushChange == 0) {
-		rushChange = 1;
-		startBossPos = bossPos;
-		endBossPos = bossPos;
+	int count = 0;
+	if (input->TriggerKey(DIK_E) && countDown == 60) {
+		boss_rush_flag = true;
+	}
+
+	if (boss_rush_flag == true)
+	{
+		countDown--;
+		if (countDown > 0)
+		{
+			bosspose = 1;
+		}
 	}
 
 	if (rushChange != 0) {
-		nowTime += 0.01f;
-		timeRate = min(nowTime / rushEndTime, 1);
+		rushNowTime += 0.01f;
+		rushTimeRate = min(rushNowTime / rushEndTime, 1);
 		bossframe++;
 		if (bossframe < 34)
 		{
@@ -408,44 +417,34 @@ void GameScene::bossAttack() {
 		}
 	}
 
+	if (countDown <= 0 && rushChange == 0 && count == 0) {
+		rushChange = 1;
+		startBossPos = bossPos;
+		endBossPos = playerPos;
+		count += 1;
+	}
+
+
 	if (rushChange == 1) {
-		if (input->PushKey(DIK_UP)) {
-			endBossPos.z = startBossPos.z + avoidMove;
-			endBossPos.x = startBossPos.x - avoidMove;
-
-		} else if (input->PushKey(DIK_DOWN)) {
-			endBossPos.z = startBossPos.z - avoidMove;
-			endBossPos.x = startBossPos.x + avoidMove;
-		}
-		if (input->PushKey(DIK_RIGHT)) {
-			endBossPos.z = startBossPos.z + avoidMove;
-			endBossPos.x = startBossPos.x + avoidMove;
-		} else if (input->PushKey(DIK_LEFT)) {
-			endBossPos.z = startBossPos.z - avoidMove;
-			endBossPos.x = startBossPos.x - avoidMove;
-		}
-
-		rushChange = 2;
+		bossPos = easeOutQuint(startBossPos, endBossPos, rushTimeRate);
 	}
-	if (rushChange == 2) {
-		bossPos = easeOutQuint(startBossPos, endBossPos, timeRate);
-	}
-
-	// 座標の変更を反映
-	bossObj->SetPosition(bossPos);
 
 	if (bossframe >= 34 && bossframe < 80) {
 		bosspose = 2;
 	}
 
-	if (timeRate == 1) {
-		nowTime = 0;
-		timeRate = 0;
+	// 座標の変更を反映
+	bossObj->SetPosition(bossPos);
+
+	if (rushTimeRate == 1) {
+		rushNowTime = 0;
+		rushTimeRate = 0;
 		rushChange = false;
 		boss_rush_flag = false;
 		bossframe = 0;
 		bosspose = 0;
 		countDown = 60;
+		count = 0;
 	}
 }
 
