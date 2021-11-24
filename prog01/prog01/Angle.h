@@ -8,6 +8,7 @@ public:
 	void Update();
 	float GetAngle();
 	float PosForAngle(float startPosX, float startPosY, float endPosX, float endPosY);
+	float lR(float startPosX, float startPosY, float endPosX, float endPosY);
 
 private:
 	//    cx:座標　cy:座標  　mv:移動量   
