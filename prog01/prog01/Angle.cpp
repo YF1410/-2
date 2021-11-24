@@ -23,6 +23,14 @@ float Angle::PosForAngle(float startPosX, float startPosY, float endPosX, float 
 	return resultAngle;
 }
 
+float Angle::lR(float startPosX, float startPosY, float endPosX, float endPosY) {
+	float px = endPosX - startPosX;
+	float py = endPosY - startPosY;
+
+	float l = sqrt(px * px + py * py);
+	return l;
+}
+
 ////ê˘âÒ
 //if (keyg[37]) {	//Å©
 //	angle += 5;
