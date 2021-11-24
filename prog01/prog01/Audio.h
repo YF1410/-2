@@ -60,7 +60,7 @@ public: // メンバ関数
 	bool Initialize();
 
 	// サウンドファイルの読み込みと再生
-	void PlayWave(const char *filename);
+	void PlayWave(const char *filename, int loopCount, float volume);
 
 	void Stop();
 private: // メンバ変数

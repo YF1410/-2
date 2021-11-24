@@ -29,12 +29,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 
 	this->dxCommon = dxCommon;
 	this->input = input;
-	this->titleAudio = audio;
-	this->playAudio = audio;
-	this->gameoverAudio = audio;
-	this->carAudio = audio;
-	this->dangerAudio = audio;
-	this->deadAudio = audio;
+	this->game_bgm = audio;
+	this->attack_se = audio;
 	// デバッグテキスト用テクスチャ読み込み
 	if (!Sprite::LoadTexture(debugTextTexNumber, L"Resources/debugfont.png")) {
 		assert(0);
@@ -114,6 +110,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 	bossRot = bossObj->GetRotation();
 	cameraEye = Object3d::GetEye();
 	cameraTarget = Object3d::GetTarget();
+
+	//BGM再生はここ
+	game_bgm->PlayWave("Resources/BGM/game_bgm.wav", 255, 0.2);
 }
 
 void GameScene::Update() {
@@ -428,6 +427,8 @@ void GameScene::playerAttack() {
 	{
 		attackFlag = true;
 		playerMode = 3;
+		//音声の読み込みと再生
+		attack_se->PlayWave("Resources/SE/attack_se.wav", 0, 0.2);
 	}
 	if (attackFlag == true)
 	{

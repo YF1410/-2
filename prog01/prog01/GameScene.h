@@ -62,12 +62,8 @@ private: // メンバ変数
 	DirectXCommon* dxCommon = nullptr;
 	Input* input = nullptr;
 	Angle* angle = new Angle();
-	Audio* titleAudio = nullptr;
-	Audio* playAudio = nullptr;
-	Audio* gameoverAudio = nullptr;
-	Audio* carAudio = nullptr;
-	Audio* dangerAudio = nullptr;
-	Audio* deadAudio = nullptr;
+	Audio* game_bgm = nullptr;
+	Audio* attack_se = nullptr;
 	DebugText debugText;
 
 	// ゲームシーン用
