@@ -112,19 +112,35 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 
 void GameScene::Update() {
 	Move();
-	bossRotation();
 	avoidance();
 	playerAttack();
 	collision();
 	bossAttack();
-
 	playerObj->Update();
 	groundObj->Update();
 	bossObj->Update();
 }
 
 void GameScene::resetPos() {
-	playerObj->SetPosition({ 0.0f, 0.0f, 0.0f });
+	playerObj->SetModel(playerModel);
+	playerObj->SetPosition({ 25.0f, 0.0f, -25.0f });
+	playerObj->SetScale({ 5.0f, 5.0f, 5.0f });
+	playerObj->SetRotation({ 0, -45.0f, 0 });
+	groundObj->SetModel(groundModel);
+	groundObj->SetPosition({ 0.0f, -5.0f, 0.0f });
+	groundObj->SetScale({ 5.0f, 5.0f, 5.0f });
+	groundObj->SetRotation({ 0, 180.0f, 0 });
+	bossObj->SetModel(bossModel);
+	bossObj->SetPosition({ 0.0f, 0.0f, 0.0f });
+	bossObj->SetScale({ 5.0f, 5.0f, 5.0f });
+	bossObj->SetRotation({ 0, 135.0f, 0 });
+
+	playerPos = playerObj->GetPosition();
+	playerRot = playerObj->GetRotation();
+	bossPos = bossObj->GetPosition();
+	bossRot = bossObj->GetRotation();
+	cameraEye = Object3d::GetEye();
+	cameraTarget = Object3d::GetTarget();
 }
 
 void GameScene::Draw() {
@@ -172,10 +188,12 @@ void GameScene::Draw() {
 
 	if (playerHp > 0) {
 		playerObj->Draw();
+		playerFlag = true;
 	}
 	groundObj->Draw();
 	if (bossHp > 0) {
 		bossObj->Draw();
+		bossFlag = true;
 	}
 	// 3Dオブジェクト描画後処理
 	Object3d::PostDraw();
@@ -365,25 +383,25 @@ void GameScene::avoidance() {
 }
 
 void GameScene::playerAttack() {
-	if (input->TriggerKey(DIK_Q) && attack_flag == false)
+	if (input->TriggerKey(DIK_Q) && attackFlag == false)
 	{
-		attack_flag = true;
+		attackFlag = true;
 		playerMode = 3;
 	}
-	if (attack_flag == true)
+	if (attackFlag == true)
 	{
 		frame++;
 	}
 
-	if (frame < 24 && attack_flag == true)
+	if (frame < 24 && attackFlag == true)
 	{
 		charapose = 1;
-	} else if (frame >= 24 && frame < 60 && attack_flag == true) {
+	} else if (frame >= 24 && frame < 60 && attackFlag == true) {
 		charapose = 2;
 
-	} else if (frame >= 60 && attack_flag == true) {
+	} else if (frame >= 60 && attackFlag == true) {
 		frame = 0;
-		attack_flag = false;
+		attackFlag = false;
 		charapose = 0;
 	}
 
@@ -393,44 +411,34 @@ void GameScene::playerAttack() {
 }
 
 void GameScene::bossAttack() {
-	int count = 0;
-	if (input->TriggerKey(DIK_E) && countDown == 60) {
-		boss_rush_flag = true;
+	attackCount--;
+	if (rushChange == 0) {
+		bossRotation();
 	}
 
-	if (boss_rush_flag == true)
+	if (attackCount == 180) {
+		bossRushFlag = true;
+	}
+
+	if (bossRushFlag == true)
 	{
-		countDown--;
-		if (countDown > 0)
-		{
-			bosspose = 1;
+		bosspose = 1;
+		if (rushChange != 0) {
+			rushNowTime += 0.01f;
+			rushTimeRate = min(rushNowTime / rushEndTime, 1);
 		}
-	}
 
-	if (rushChange != 0) {
-		rushNowTime += 0.01f;
-		rushTimeRate = min(rushNowTime / rushEndTime, 1);
-		bossframe++;
-		if (bossframe < 34)
-		{
-			bosspose = 1;
+		if (attackCount <= 120 && rushChange == 0) {
+			rushChange = 1;
+			startBossPos = bossPos;
+			endBossPos = playerPos;
 		}
-	}
 
-	if (countDown <= 0 && rushChange == 0 && count == 0) {
-		rushChange = 1;
-		startBossPos = bossPos;
-		endBossPos = playerPos;
-		count += 1;
-	}
+		if (rushChange == 1) {
+			bossPos = easeOutQuint(startBossPos, endBossPos, rushTimeRate);
+			bosspose = 2;
+		}
 
-
-	if (rushChange == 1) {
-		bossPos = easeOutQuint(startBossPos, endBossPos, rushTimeRate);
-	}
-
-	if (bossframe >= 34 && bossframe < 80) {
-		bosspose = 2;
 	}
 
 	// 座標の変更を反映
@@ -439,14 +447,71 @@ void GameScene::bossAttack() {
 	if (rushTimeRate == 1) {
 		rushNowTime = 0;
 		rushTimeRate = 0;
-		rushChange = false;
-		boss_rush_flag = false;
-		bossframe = 0;
-		bosspose = 0;
-		countDown = 60;
-		count = 0;
+		rushChange = 2;
+		attackCount = 300;
+		bossRushFlag = false;
+	}
+	if (rushChange == 2) {
+		if (attackCount == 240) {
+			bosspose = 0;
+			rushChange = 0;
+		}
 	}
 }
+
+//void GameScene::bossAttack() {
+//
+//	attackCount++;
+//	if (rushChange == 0) {
+//		bossRotation();
+//	}
+//
+//	if (attackCount == 60) {
+//		bossRushFlag = true;
+//	}
+//
+//	if (bossRushFlag == true)
+//	{
+//		bosspose = 1;
+//	}
+//
+//	if (attackCount <= 180 && rushChange == 0) {
+//		rushChange = 1;
+//		startBossPos = bossPos;
+//		endBossPos = playerPos;
+//	}
+//
+//	if (rushChange != 0) {
+//		rushNowTime += 0.01f;
+//		rushTimeRate = min(rushNowTime / rushEndTime, 1);
+//		bossFrame++;
+//
+//		bosspose = 2;
+//	}
+//
+//	if (rushChange == 1) {
+//		bossPos = easeOutQuint(startBossPos, endBossPos, rushTimeRate);
+//		collision();
+//	}
+//
+//	// 座標の変更を反映
+//	bossObj->SetPosition(bossPos);
+//
+//	if (rushTimeRate == 1) {
+//		rushNowTime = 0;
+//		rushTimeRate = 0;
+//		rushChange = 0;
+//		attackCount = 0;
+//		bossRushFlag = false;
+//		if (collisionFlag == true) {
+//			playerHp--;
+//		}
+//	}
+//	if (bossFrame >= 60) {
+//		bosspose = 0;
+//		bossFrame = 0;
+//	}
+//}
 
 void GameScene::collision() {
 	playerRadius = 15.0f;

@@ -109,9 +109,9 @@ private: // メンバ変数
 	int charapose = 0;
 	int bosspose = 0;
 
-	bool attack_flag = false;
-	bool boss_rush_flag = false;
-	float bossframe = 0.0f;
+	bool attackFlag = false;
+	bool bossRushFlag = false;
+	float bossFrame = 0.0f;
 	float frame = 0.0f;
 
 	float playerScale = 1.0f;
@@ -125,7 +125,7 @@ private: // メンバ変数
 	int rushChange = 0;
 	float moveAmount = 1.0f;
 	float avoidMove = 40.0f;
-	float countDown = 60;
+	float attackCount = 300;
 	float rushNowTime = 0;
 	float rushEndTime = 0.5;
 	float rushTimeRate = 0;
@@ -139,4 +139,6 @@ private: // メンバ変数
 
 	int playerHp = 3;
 	int bossHp = 3;
+	bool playerFlag = false;
+	bool bossFlag = false;
 };
