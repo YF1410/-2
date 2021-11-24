@@ -58,6 +58,8 @@ public: // メンバ関数
 
 	void bossAttack();
 
+	void GameReset();
+
 private: // メンバ変数
 	DirectXCommon* dxCommon = nullptr;
 	Input* input = nullptr;
@@ -71,8 +73,10 @@ private: // メンバ変数
 	Sprite* back1 = nullptr;
 	Sprite* back2 = nullptr;
 	Sprite* back3 = nullptr;
+	Sprite* Hpgauge = nullptr;
+	Sprite* Hpber = nullptr;
 	Sprite* title = nullptr;
-	Sprite* uiBack = nullptr;
+	Sprite* gameclear = nullptr;
 	Sprite* gameOver = nullptr;
 	Model* playerModel = nullptr;
 	Model* groundModel = nullptr;
@@ -151,6 +155,7 @@ private: // メンバ変数
 
 	int playerHp = 1;
 	int bossHp = 3;
+	float bossHpgauge = 30;
 	bool playerFlag = false;
 	bool bossFlag = false;
 };

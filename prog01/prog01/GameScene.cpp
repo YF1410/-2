@@ -9,8 +9,10 @@ GameScene::~GameScene() {
 	safe_delete(playerModel);
 	safe_delete(groundModel);
 	safe_delete(bossModel);
+	safe_delete(Hpber);
+	safe_delete(Hpgauge);
 	safe_delete(title);
-	safe_delete(uiBack);
+	safe_delete(gameclear);
 	safe_delete(gameOver);
 	safe_delete(player_attack_befor_Model);
 	safe_delete(player_attack_after_Model);
@@ -51,23 +53,40 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 	// 前景スプライト生成
 	//タイトル
 	title = Sprite::Create(2, { 0.0f,0.0f });
-	title->SetSize({ 1280.0f,960.0f });
+	title->SetSize({ 1280.0f,720.0f });
 
-	// テクスチャ読み込み
-	if (!Sprite::LoadTexture(13, L"Resources/uiBack.png")) {
+	if (!Sprite::LoadTexture(3, L"Resources/HPgauge.png")) {
 		assert(0);
 	}
-	//回数
-	uiBack = Sprite::Create(13, { 0.0f,0.0f });
-	uiBack->SetSize({ 1280.0f,960.0f });
+	// 前景スプライト生成
+	//HPゲージ
+	Hpgauge = Sprite::Create(3, { 0.0f,0.0f });
+	Hpgauge->SetPosition({5 , 35 });
+	Hpgauge->SetSize({ 30.0f,60.0f });
+
+	if (!Sprite::LoadTexture(4, L"Resources/BossHP.png")) {
+		assert(0);
+	}
+	// 前景スプライト生成
+	//HPバー
+	Hpber = Sprite::Create(4, { 0.0f,0.0f });
+	Hpber->SetSize({ 306.0f,96.0f });
+
+	// テクスチャ読み込み
+	if (!Sprite::LoadTexture(13, L"Resources/gameclear_color.png")) {
+		assert(0);
+	}
+	//ゲームクリア
+	gameclear = Sprite::Create(13, { 0.0f,0.0f });
+	gameclear->SetSize({ 1280.0f,720.0f });
 
 	// テクスチャ読み込み
 	if (!Sprite::LoadTexture(14, L"Resources/GameOver.png")) {
 		assert(0);
 	}
-	//リザルト
+	//ゲームオーバー
 	gameOver = Sprite::Create(14, { 0.0f,0.0f });
-	gameOver->SetSize({ 1280.0f,960.0f });
+	gameOver->SetSize({ 1280.0f,720.0f });
 
 	//.objの名前を指定してモデルを読み込む
 	//player
@@ -110,44 +129,80 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 	bossRot = bossObj->GetRotation();
 	cameraEye = Object3d::GetEye();
 	cameraTarget = Object3d::GetTarget();
-
+	
 	//BGM再生はここ
-	game_bgm->PlayWave("Resources/BGM/game_bgm.wav", 255, 0.2);
+	//game_bgm->PlayWave("Resources/BGM/game_bgm.wav", 255, 0.2);
 }
 
 void GameScene::Update() {
-	bossAttackCount--;
-	Move();
-	avoidance();
-	playerAttack();
-	collision();
+	if (nowScene == 0)//タイトル
+	{
+		
+		if (input->TriggerKey(DIK_SPACE)) {
+			game_bgm->PlayWave("Resources/BGM/game_bgm.wav", 255, 0.2);
+			nowScene = 1;
+		}
+	}
+	else if (nowScene == 1)//ゲームメイン
+	{
+		bossAttackCount--;
+		Move();
+		avoidance();
+		playerAttack();
+		collision();
 
-	bossAttack();
+		bossAttack();
 
-	if (playerPos.x >= 275.0f) {
-		playerPos.x = 275.0f;
-		cameraEye.x = 340.0f;
-		cameraTarget.x = 250.0f;
-	}
-	if (playerPos.x <= -275.0f) {
-		playerPos.x = -275.0f;
-		cameraEye.x = -210.0f;
-		cameraTarget.x = -300.0f;
-	}
-	if (playerPos.z >= 250.0f) {
-		playerPos.z = 250.0f;
-		cameraEye.z = 185.0f;
-		cameraTarget.z = 275.0f;
-	}
-	if (playerPos.z <= -150.0f) {
-		playerPos.z = -150.0f;
-		cameraEye.z = -215.0f;
-		cameraTarget.z = -125.0f;
+		if (playerPos.x >= 275.0f) {
+			playerPos.x = 275.0f;
+			cameraEye.x = 340.0f;
+			cameraTarget.x = 250.0f;
+		}
+		if (playerPos.x <= -275.0f) {
+			playerPos.x = -275.0f;
+			cameraEye.x = -210.0f;
+			cameraTarget.x = -300.0f;
+		}
+		if (playerPos.z >= 250.0f) {
+			playerPos.z = 250.0f;
+			cameraEye.z = 185.0f;
+			cameraTarget.z = 275.0f;
+		}
+		if (playerPos.z <= -150.0f) {
+			playerPos.z = -150.0f;
+			cameraEye.z = -215.0f;
+			cameraTarget.z = -125.0f;
+		}
+		playerObj->Update();
+		groundObj->Update();
+		bossObj->Update();
+		if (playerHp <= 0)
+		{
+			nowScene = 2;
+
+		}
+		else if (bossHp <= 0)
+		{
+			nowScene = 3;
+		}
 	}
 
-	playerObj->Update();
-	groundObj->Update();
-	bossObj->Update();
+
+	else if (nowScene == 2)//ゲームオーバー
+	{
+
+		if (input->TriggerKey(DIK_SPACE)) {
+
+			GameReset();
+		}
+	}
+	else if (nowScene == 3)//ゲームクリア
+	{
+
+		if (input->TriggerKey(DIK_SPACE)) {
+			GameReset();
+		}
+	}
 }
 
 void GameScene::resetPos() {
@@ -164,12 +219,16 @@ void GameScene::resetPos() {
 	bossObj->SetScale({ 5.0f, 5.0f, 5.0f });
 	bossObj->SetRotation({ 0, 135.0f, 0 });
 
+
 	playerPos = playerObj->GetPosition();
 	playerRot = playerObj->GetRotation();
 	bossPos = bossObj->GetPosition();
 	bossRot = bossObj->GetRotation();
+
 	cameraEye = Object3d::GetEye();
 	cameraTarget = Object3d::GetTarget();
+	cameraEye = { 90.0,135.0,-90.0 };
+	cameraTarget = { 0,0,0 };
 }
 
 void GameScene::Draw() {
@@ -180,7 +239,7 @@ void GameScene::Draw() {
 	// 背景スプライト描画前処理
 	Sprite::PreDraw(dxCommon->GetCommandList());
 	// 背景スプライト描画
-
+	
 	// スプライト描画後処理
 	Sprite::PostDraw();
 	// 深度バッファクリア
@@ -190,46 +249,58 @@ void GameScene::Draw() {
 	// 3Dオブジェクト描画前処理
 	Object3d::PreDraw(dxCommon->GetCommandList());
 	// 3Dオブクジェクトの描画
-	if (charaPose == 0)
+	if (nowScene == 1)
 	{
-		playerObj->SetModel(playerModel);
-	} else if (charaPose == 1)
-	{
-		playerObj->SetModel(player_attack_befor_Model);
-	} else if (charaPose == 2)
-	{
-		playerObj->SetModel(player_attack_after_Model);
-	} else if (charaPose == 3)
-	{
-		playerObj->SetModel(player_dash_Model);
+		if (charaPose == 0)
+		{
+			playerObj->SetModel(playerModel);
+		}
+		else if (charaPose == 1)
+		{
+			playerObj->SetModel(player_attack_befor_Model);
+		}
+		else if (charaPose == 2)
+		{
+			playerObj->SetModel(player_attack_after_Model);
+		}
+		else if (charaPose == 3)
+		{
+			playerObj->SetModel(player_dash_Model);
+		}
+
+		if (bossPose == 0)
+		{
+			bossObj->SetModel(bossModel);
+		}
+		else if (bossPose == 1)
+		{
+			bossObj->SetModel(boss_rush_befor_Model);
+		}
+		else if (bossPose == 2)
+		{
+			bossObj->SetModel(boss_rush_after_Model);
+		}
+		else if (bossPose == 3)
+		{
+			bossObj->SetModel(boss_sweep_befor_Model);
+		}
+		else if (bossPose == 4)
+		{
+			bossObj->SetModel(boss_sweep_after_Model);
+		}
+
+		if (playerHp > 0) {
+			playerObj->Draw();
+			playerFlag = true;
+		}
+		groundObj->Draw();
+		if (bossHp > 0) {
+			bossHpgauge = 100 * bossHp;
+			bossObj->Draw();
+			bossFlag = true;
+		}
 	}
 
-	if (bossPose == 0)
-	{
-		bossObj->SetModel(bossModel);
-	} else if (bossPose == 1)
-	{
-		bossObj->SetModel(boss_rush_befor_Model);
-	} else if (bossPose == 2)
-	{
-		bossObj->SetModel(boss_rush_after_Model);
-	} else if (bossPose == 3)
-	{
-		bossObj->SetModel(boss_sweep_befor_Model);
-	} else if (bossPose == 4)
-	{
-		bossObj->SetModel(boss_sweep_after_Model);
-	}
-
-	if (playerHp > 0) {
-		playerObj->Draw();
-		playerFlag = true;
-	}
-	groundObj->Draw();
-	if (bossHp > 0) {
-		bossObj->Draw();
-		bossFlag = true;
-	}
 	// 3Dオブジェクト描画後処理
 	Object3d::PostDraw();
 #pragma endregion 3Dオブジェクト描画
@@ -237,7 +308,24 @@ void GameScene::Draw() {
 	// 前景スプライト描画前処理
 	Sprite::PreDraw(dxCommon->GetCommandList());
 	// 前景スプライトの描画
-
+	if (nowScene == 0)
+	{
+		title->Draw();
+	}
+	if (nowScene == 1)
+	{
+		Hpber->Draw();
+		Hpgauge->SetSize({ bossHpgauge,60 });
+		Hpgauge->Draw();
+	}
+	else if (nowScene == 2)
+	{
+		gameOver->Draw();
+	}
+	else if (nowScene == 3)
+	{
+		gameclear->Draw();
+	}
 	// デバッグテキストの描画
 	debugText.DrawAll(dxCommon->GetCommandList());
 	// スプライト描画後処理
@@ -258,23 +346,24 @@ void GameScene::Move() {
 			cameraTarget.x -= moveAmount;
 			playerRot.y = -45.0f;
 			if (input->PushKey(DIK_D)) {
-				playerPos.z += moveAmount/2;
-				cameraEye.z += moveAmount/2;
-				cameraTarget.z += moveAmount/2;
+				playerPos.z += moveAmount / 2;
+				cameraEye.z += moveAmount / 2;
+				cameraTarget.z += moveAmount / 2;
 				playerPos.x += moveAmount;
 				cameraEye.x += moveAmount;
 				cameraTarget.x += moveAmount;
 				playerRot.y = 0.0f;
-			} else if (input->PushKey(DIK_A)) {
-				playerPos.x -= moveAmount/2;
-				cameraEye.x -= moveAmount/2;
-				cameraTarget.x -= moveAmount/2;
+			}
+			else if (input->PushKey(DIK_A)) {
+				playerPos.x -= moveAmount / 2;
+				cameraEye.x -= moveAmount / 2;
+				cameraTarget.x -= moveAmount / 2;
 				playerPos.z -= moveAmount;
 				cameraEye.z -= moveAmount;
 				cameraTarget.z -= moveAmount;
 				playerRot.y = -90.0f;
 			}
-		} 
+		}
 		else if (input->PushKey(DIK_S)) {
 			playerPos.z -= moveAmount;
 			cameraEye.z -= moveAmount;
@@ -284,23 +373,24 @@ void GameScene::Move() {
 			cameraTarget.x += moveAmount;
 			playerRot.y = 135.0f;
 			if (input->PushKey(DIK_D)) {
-				playerPos.x += moveAmount/2;
-				cameraEye.x += moveAmount/2;
-				cameraTarget.x += moveAmount/2;
+				playerPos.x += moveAmount / 2;
+				cameraEye.x += moveAmount / 2;
+				cameraTarget.x += moveAmount / 2;
 				playerPos.z += moveAmount;
 				cameraEye.z += moveAmount;
 				cameraTarget.z += moveAmount;
 				playerRot.y = 90.0f;
-			} else if (input->PushKey(DIK_A)) {
-				playerPos.z -= moveAmount/2;
-				cameraEye.z -= moveAmount/2;
-				cameraTarget.z -= moveAmount/2;
+			}
+			else if (input->PushKey(DIK_A)) {
+				playerPos.z -= moveAmount / 2;
+				cameraEye.z -= moveAmount / 2;
+				cameraTarget.z -= moveAmount / 2;
 				playerPos.x -= moveAmount;
 				cameraEye.x -= moveAmount;
 				cameraTarget.x -= moveAmount;
 				playerRot.y = 180.0f;
 			}
-		} 
+		}
 		else if (input->PushKey(DIK_D)) {
 			playerPos.x += moveAmount;
 			cameraEye.x += moveAmount;
@@ -309,7 +399,7 @@ void GameScene::Move() {
 			cameraEye.z += moveAmount;
 			cameraTarget.z += moveAmount;
 			playerRot.y = 45.0f;
-		} 
+		}
 		else if (input->PushKey(DIK_A)) {
 			playerPos.x -= moveAmount;
 			cameraEye.x -= moveAmount;
@@ -357,12 +447,14 @@ bool GameScene::avoidance() {
 				endPlayerPos.x = startPlayerPos.x;
 				endCameraEye.x = startCameraEye.x;
 				endCameraTarget.x = startCameraTarget.x;
-			} else if (input->PushKey(DIK_A)) {
+			}
+			else if (input->PushKey(DIK_A)) {
 				endPlayerPos.z = startPlayerPos.z;
 				endCameraEye.z = startCameraEye.z;
 				endCameraTarget.z = startCameraTarget.z;
 			}
-		} else if (input->PushKey(DIK_S)) {
+		}
+		else if (input->PushKey(DIK_S)) {
 			playerMode = 2;
 			endPlayerPos.z = startPlayerPos.z - avoidMove;
 			endCameraEye.z = startCameraEye.z - avoidMove;
@@ -374,12 +466,14 @@ bool GameScene::avoidance() {
 				endPlayerPos.z = startPlayerPos.z;
 				endCameraEye.z = startCameraEye.z;
 				endCameraTarget.z = startCameraTarget.z;
-			} else if (input->PushKey(DIK_A)) {
+			}
+			else if (input->PushKey(DIK_A)) {
 				endPlayerPos.x = startPlayerPos.x;
 				endCameraEye.x = startCameraEye.x;
 				endCameraTarget.x = startCameraTarget.x;
 			}
-		} else if (input->PushKey(DIK_D)) {
+		}
+		else if (input->PushKey(DIK_D)) {
 			playerMode = 2;
 			endPlayerPos.z = startPlayerPos.z + avoidMove;
 			endCameraEye.z = startCameraEye.z + avoidMove;
@@ -387,7 +481,8 @@ bool GameScene::avoidance() {
 			endPlayerPos.x = startPlayerPos.x + avoidMove;
 			endCameraEye.x = startCameraEye.x + avoidMove;
 			endCameraTarget.x = startCameraTarget.x + avoidMove;
-		} else if (input->PushKey(DIK_A)) {
+		}
+		else if (input->PushKey(DIK_A)) {
 			playerMode = 2;
 			endPlayerPos.z = startPlayerPos.z - avoidMove;
 			endCameraEye.z = startCameraEye.z - avoidMove;
@@ -438,10 +533,12 @@ void GameScene::playerAttack() {
 	if (attackFrame < 24 && attackFlag == true)
 	{
 		charaPose = 1;
-	} else if (attackFrame >= 24 && attackFrame < 60 && attackFlag == true) {
+	}
+	else if (attackFrame >= 24 && attackFrame < 60 && attackFlag == true) {
 		charaPose = 2;
 
-	} else if (attackFrame >= 60 && attackFlag == true) {
+	}
+	else if (attackFrame >= 60 && attackFlag == true) {
 		attackFrame = 0;
 		attackFlag = false;
 		charaPose = 0;
@@ -457,7 +554,7 @@ void GameScene::bossRush() {
 		bossRotation();
 	}
 
-	if (bossAttackCount == 210) {
+	if (bossAttackCount == 230) {
 		bossRushFlag = true;
 	}
 
@@ -488,7 +585,7 @@ void GameScene::bossRush() {
 	bossObj->SetPosition(bossPos);
 
 	if (rushTimeRate == 1.0f) {
-		
+
 
 		rushNowTime = 0;
 		rushTimeRate = 0;
@@ -557,7 +654,7 @@ void GameScene::bossAttack() {
 	if (Collision <= 30.0f && bossRushStart == false) {
 		bossSweepStart = true;
 	}
-	else if(bossSweepStart == false) {
+	else if (bossSweepStart == false) {
 		bossRushStart = true;
 	}
 
@@ -569,6 +666,38 @@ void GameScene::bossAttack() {
 	}
 }
 
+void GameScene::GameReset()
+{
+	nowScene = 0;
+	resetPos();
+	charaPose = 0;
+	bossPose = 0;
+	playerHp = 1;
+	bossHp = 3;
+	bossAttackCount = 420;
+	//mode
+	playerMode = 0;
+	rushMode = 0;
+	sweepMode = 0;
+	//Flag
+	attackFlag = false;
+	bossAttackFlag = false;
+	bossRushFlag = false;
+	bossSweepFlag = false;
+	bossRushStart = false;
+	bossSweepStart = false;
+	collisionFlag = 0;
+	//Frame
+	attackFrame = 0;
+	bossFrame = 0.0f;
+	//collision
+	collisionX = 0;
+	collisionZ = 0;
+	Collision = 0;
+	//bgm
+	game_bgm->Stop();
+}
+
 void GameScene::collision() {
 	if (!avoidance()) {
 		collisionX = playerPos.x - bossPos.x;
@@ -577,7 +706,8 @@ void GameScene::collision() {
 
 		if (Collision <= playerRadius + bossRadius) {
 			collisionFlag = true;
-		} else {
+		}
+		else {
 			collisionFlag = false;
 		}
 	}
@@ -592,3 +722,4 @@ void GameScene::bossRotation() {
 
 	bossObj->SetRotation({ 0,XMConvertToDegrees(angleY), 0 });
 }
+
