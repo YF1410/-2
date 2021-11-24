@@ -45,15 +45,18 @@ public: // メンバ関数
 	//移動
 	void Move();
 	//回避
-	void avoidance();
+	bool avoidance();
 	//攻撃
 	void playerAttack();
 	//当たり判定
 	void collision();
 	//boss攻撃
-	void bossAttack();
+	void bossRush();
+	void bossSweep();
 	//boss向き調整
 	void bossRotation();
+
+	void bossAttack();
 
 private: // メンバ変数
 	DirectXCommon* dxCommon = nullptr;
@@ -83,6 +86,8 @@ private: // メンバ変数
 	Model* player_dash_Model = nullptr;
 	Model* boss_rush_befor_Model = nullptr;
 	Model* boss_rush_after_Model = nullptr;
+	Model* boss_sweep_befor_Model = nullptr;
+	Model* boss_sweep_after_Model = nullptr;
 
 	Object3d* playerObj = nullptr;
 	Object3d* groundObj = nullptr;
@@ -106,38 +111,49 @@ private: // メンバ変数
 	XMFLOAT3 endBossPos;
 
 	int nowScene = 0;
-	int charapose = 0;
-	int bosspose = 0;
+	int charaPose = 0;
+	int bossPose = 0;
 
 	bool attackFlag = false;
+	bool bossAttackFlag = false;
 	bool bossRushFlag = false;
+	bool bossSweepFlag = false;
+	bool bossRushStart = false;
+	bool bossSweepStart = false;
 	float bossFrame = 0.0f;
-	float frame = 0.0f;
+	float attackFrame = 0.0f;
 
-	float playerScale = 1.0f;
-	float groundScale = 15.0f;
-	float largeCarScale = 3.0f;
-	float scrollGround = 35.0f;
+	const float playerScale = 1.0f;
+	const float groundScale = 15.0f;
+	const float largeCarScale = 3.0f;
+
 	float avoidNowTime = 0;
-	float avoidEndTime = 0.5f;
+	const float avoidEndTime = 0.5f;
 	float avoidTimeRate = 0;
+
+	const float moveAmount = 1.0f;
+
+	const float avoidMove = 40.0f;
+
 	int playerMode = 0;
-	int rushChange = 0;
-	float moveAmount = 1.0f;
-	float avoidMove = 40.0f;
-	float attackCount = 300;
+
+	int bossAttackCount = 420;
+
+	int rushMode = 0;
 	float rushNowTime = 0;
-	float rushEndTime = 0.5;
+	const float rushEndTime = 0.5;
 	float rushTimeRate = 0;
 
-	float playerRadius = 0;
-	float bossRadius = 0;
+	int sweepMode = 0;
+
+	const float playerRadius = 15.0f;
+	const float bossRadius = 15.0f;
 	float collisionX = 0;
 	float collisionZ = 0;
 	float Collision = 0;
 	bool collisionFlag = 0;
 
-	int playerHp = 3;
+	int playerHp = 1;
 	int bossHp = 3;
 	bool playerFlag = false;
 	bool bossFlag = false;
