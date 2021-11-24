@@ -179,10 +179,12 @@ void GameScene::Update() {
 		if (playerHp <= 0)
 		{
 			nowScene = 2;
+			game_bgm->Stop();
 
 		}
 		else if (bossHp <= 0)
 		{
+			game_bgm->Stop();
 			nowScene = 3;
 		}
 	}
@@ -695,7 +697,12 @@ void GameScene::GameReset()
 	collisionZ = 0;
 	Collision = 0;
 	//bgm
-	game_bgm->Stop();
+	game_bgm->Initialize();
+	//timerate
+	rushTimeRate = 0;
+	rushNowTime = 0;
+	avoidNowTime = 0;
+	avoidTimeRate = 0;
 }
 
 void GameScene::collision() {
