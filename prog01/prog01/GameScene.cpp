@@ -113,15 +113,15 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 	playerObj->SetModel(playerModel);
 	playerObj->SetPosition({ 25.0f, 0.0f, -25.0f });
 	playerObj->SetScale({ 5.0f, 5.0f, 5.0f });
-	playerObj->SetRotation({ 0, -45.0f, 0 });
+	playerObj->SetRotation({ 0, 0.0f, 0 });
 	groundObj->SetModel(groundModel);
 	groundObj->SetPosition({ 0.0f, -5.0f, 0.0f });
 	groundObj->SetScale({ 5.0f, 5.0f, 5.0f });
 	groundObj->SetRotation({ 0, 180.0f, 0 });
 	bossObj->SetModel(bossModel);
-	bossObj->SetPosition({ 0.0f, 0.0f, 0.0f });
+	bossObj->SetPosition({ 25.0f, 0.0f, 125.0f });
 	bossObj->SetScale({ 5.0f, 5.0f, 5.0f });
-	bossObj->SetRotation({ 0, 135.0f, 0 });
+	bossObj->SetRotation({ 0, 180.0f, 0 });
 
 	playerPos = playerObj->GetPosition();
 	playerRot = playerObj->GetRotation();
@@ -129,15 +129,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input, Audio* audio) 
 	bossRot = bossObj->GetRotation();
 	cameraEye = Object3d::GetEye();
 	cameraTarget = Object3d::GetTarget();
-	
-	//BGM再生はここ
-	//game_bgm->PlayWave("Resources/BGM/game_bgm.wav", 255, 0.2);
 }
 
 void GameScene::Update() {
 	if (nowScene == 0)//タイトル
 	{
-		
 		if (input->TriggerKey(DIK_SPACE)) {
 			game_bgm->PlayWave("Resources/BGM/game_bgm.wav", 255, 0.2);
 			nowScene = 1;
@@ -211,15 +207,15 @@ void GameScene::resetPos() {
 	playerObj->SetModel(playerModel);
 	playerObj->SetPosition({ 25.0f, 0.0f, -25.0f });
 	playerObj->SetScale({ 5.0f, 5.0f, 5.0f });
-	playerObj->SetRotation({ 0, -45.0f, 0 });
+	playerObj->SetRotation({ 0, 0.0f, 0 });
 	groundObj->SetModel(groundModel);
 	groundObj->SetPosition({ 0.0f, -5.0f, 0.0f });
 	groundObj->SetScale({ 5.0f, 5.0f, 5.0f });
 	groundObj->SetRotation({ 0, 180.0f, 0 });
 	bossObj->SetModel(bossModel);
-	bossObj->SetPosition({ 0.0f, 0.0f, 0.0f });
+	bossObj->SetPosition({ 25.0f, 0.0f, 125.0f });
 	bossObj->SetScale({ 5.0f, 5.0f, 5.0f });
-	bossObj->SetRotation({ 0, 135.0f, 0 });
+	bossObj->SetRotation({ 0, 180.0f, 0 });
 
 
 	playerPos = playerObj->GetPosition();
@@ -587,8 +583,6 @@ void GameScene::bossRush() {
 	bossObj->SetPosition(bossPos);
 
 	if (rushTimeRate == 1.0f) {
-
-
 		rushNowTime = 0;
 		rushTimeRate = 0;
 		rushMode = 2;
@@ -653,7 +647,7 @@ void GameScene::bossAttack() {
 	collisionX = playerPos.x - bossPos.x;
 	collisionZ = playerPos.z - bossPos.z;
 	Collision = sqrtf((collisionX * collisionX) + (collisionZ * collisionZ));
-	if (Collision <= 30.0f && bossRushStart == false) {
+	if (Collision <= 75.0f && bossRushStart == false) {
 		bossSweepStart = true;
 	}
 	else if (bossSweepStart == false) {
